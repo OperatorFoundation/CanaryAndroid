@@ -1,3 +1,8 @@
+/**
+ * This activity displays the Canary Test app and allows the user to run connectivity
+ * tests, displaying the results on the screen in a scrollable format
+ */
+
 package canary.android
 
 import androidx.appcompat.app.AppCompatActivity
@@ -14,10 +19,13 @@ class MainActivity : AppCompatActivity() {
         val popup = Toast.makeText(this, "HELLO", Toast.LENGTH_SHORT)
         val runTestButton: Button = findViewById(R.id.runButton)
 
+        var logs = "lorem ipsum blah bla blabber"
+
         runTestButton.setOnClickListener{
             popup.show()
             var testLogs: TextView = findViewById(R.id.logDisplayField)
-            testLogs.text = "lorem ipsum blah bla blabber"
+            //populate logs here
+            testLogs.text = logs
         }
         val browseButton: Button = findViewById(R.id.browseButton)
         browseButton.setOnClickListener {
