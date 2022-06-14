@@ -5,6 +5,7 @@
 
 package canary.android
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -18,18 +19,20 @@ class MainActivity : AppCompatActivity() {
 
         val popup = Toast.makeText(this, "HELLO", Toast.LENGTH_SHORT)
         val runTestButton: Button = findViewById(R.id.runButton)
+        val browseButton: Button = findViewById(R.id.browseButton)
 
         var logs = "lorem ipsum blah bla blabber"
 
         runTestButton.setOnClickListener{
             popup.show()
             var testLogs: TextView = findViewById(R.id.logDisplayField)
-            //populate logs here
+            //Canary Library Functionality here. 
             testLogs.text = logs
         }
-        val browseButton: Button = findViewById(R.id.browseButton)
+
         browseButton.setOnClickListener {
-            popup.show()
+            val browseIntent = Intent(this, FileBrowser::class.java)
+            startActivity(browseIntent)
         }
     }
 }
