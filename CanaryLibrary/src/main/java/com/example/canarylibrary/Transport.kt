@@ -1,6 +1,17 @@
 package com.example.canarylibrary
 
-class Transport(name: String, typeString: String, configPath: String)
+class Transport(val name: String, typeString: String, val configPath: String)
 {
 
+}
+
+enum class TransportType(val server: String)
+{
+    replicant("replicant"),
+    shadowsocks("shadowsocks")
+}
+
+enum class TransportConfig
+{
+    //
 }
