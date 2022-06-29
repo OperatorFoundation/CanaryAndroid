@@ -2,7 +2,7 @@ package com.example.canarylibrary
 
 import java.util.*
 
-class TestResult(hostString: String, testDate: Date, name: String, success: Boolean = false)
+class TestResult(var hostString: String, var testDate: Date, var name: String, var success: Boolean = false)
 {
 
 }
