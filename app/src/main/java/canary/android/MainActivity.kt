@@ -23,6 +23,16 @@ class MainActivity : AppCompatActivity() {
 
         var logs = "lorem ipsum blah bla blabber"
 
+        when {
+            intent?.action == Intent.ACTION_SEND -> {
+                if ("text/json" == intent.type) {
+                    val message = receiveTextFromExternalShare(intent) // Handle text being sent
+                    Toast.makeText(this,message, Toast.LENGTH_SHORT).show()
+
+                }
+            }
+        }
+
         runTestButton.setOnClickListener{
             popup.show()
             var testLogs: TextView = findViewById(R.id.logDisplayField)
@@ -35,4 +45,13 @@ class MainActivity : AppCompatActivity() {
             startActivity(browseIntent)
         }
     }
+}
+
+private fun receiveTextFromExternalShare(intent: Intent): String {
+     intent.getStringExtra(Intent.EXTRA_TEXT)?.let{
+         println(it)
+         val message = it
+         return message
+     }
+    return "nope"
 }
