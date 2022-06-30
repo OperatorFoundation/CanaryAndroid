@@ -1,17 +1,75 @@
+/*
+ * Copyright 2019, The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package canary.android
 
+import androidx.room.Room
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import canary.android.ConfigDatabaseDao
+import canary.android.MainActivity.database.ConfigDatabaseDao
+import org.junit.Assert.assertEquals
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import java.io.IOException
 
-import org.junit.Assert.*
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
+ * This is not meant to be a full set of tests. For simplicity, most of your samples do not
+ * include tests. However, when building the Room, it is helpful to make sure it works before
+ * adding the UI.
  */
-class ExampleUnitTest {
+
+@RunWith(AndroidJUnit4::class)
+class CanaryConfigDatabaseTest {
+
+    private lateinit var testDao: ConfigDatabaseDao
+    private lateinit var db: CanaryConfigDatabase
+
+    @Before
+    fun createDb() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        // Using an in-memory database because the information stored here disappears when the
+        // process is killed.
+        db = Room.inMemoryDatabaseBuilder(context, CanaryConfigDatabase::class.java)
+            // Allowing main thread queries, just for testing.
+            .allowMainThreadQueries()
+            .build()
+        configDao = db.testDao
+    }
+
+    @After
+    @Throws(IOException::class)
+    fun closeDb() {
+        db.close()
+    }
+
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    @Throws(Exception::class)
+    fun insertAndGetConfig() {
+        val configId = configId()
+        configDao.insert(config)
+        val configLabel = configLabel()
+        configDao.insert(config)
+        val password = password()
+        configDao.insert(password)
+
+        val tonight = sleepDao.getTonight()
+        assertEquals(tonight?.sleepQuality, -1)
     }
 }
