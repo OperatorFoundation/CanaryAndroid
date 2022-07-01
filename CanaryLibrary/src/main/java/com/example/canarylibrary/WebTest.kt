@@ -1,5 +1,6 @@
 package com.example.canarylibrary
 
-class WebTest(website: String, name: String, port: Int)
+class WebTest(val website: String, val name: String, val port: Int)
 {
+
 }
