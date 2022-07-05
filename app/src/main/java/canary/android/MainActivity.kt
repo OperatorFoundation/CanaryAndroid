@@ -212,6 +212,7 @@ class MainActivity : AppCompatActivity() {
                         } catch (e:IOException){
                             file.close()
                             bufferedReader.close()
+                            streamer.close()
                             break
                         }
                     }

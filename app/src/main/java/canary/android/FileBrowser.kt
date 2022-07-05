@@ -2,18 +2,25 @@ package canary.android
 
 import android.app.Application
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 
 class FileBrowser() : AppCompatActivity() {
+    val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        // Handle the returned Uri
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file_browser)
@@ -32,6 +39,12 @@ class FileBrowser() : AppCompatActivity() {
         homeButton.setOnClickListener {
             val homeIntent = Intent(this, MainActivity::class.java)
             startActivity(homeIntent)
+        }
+
+        val selectConfigButton: Button = findViewById(R.id.selectConfig)
+        selectConfigButton.setOnClickListener {
+            getContent.launch("application/json")
+
         }
     }
 }
