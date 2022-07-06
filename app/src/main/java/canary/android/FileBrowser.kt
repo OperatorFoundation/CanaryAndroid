@@ -12,10 +12,7 @@ import kotlin.coroutines.suspendCoroutine
 
 
 class FileBrowser() : AppCompatActivity() {
-    var contentUri:Uri? = null
-    val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        contentUri = uri
-    }
+
 
     private fun getConfig(context: Context):Uri? {
         var contentUri:Uri? = null
@@ -25,11 +22,11 @@ class FileBrowser() : AppCompatActivity() {
         return contentUri
     }
 
-    private suspend fun getConfigSuspend(activity: MainActivity) {
-        val uri = getConfig(applicationContext)
-        contentUri = uri
-        getContent.launch("application/json")
-    }
+//    private suspend fun getConfigSuspend(activity: MainActivity) {
+//        val uri = getConfig(applicationContext)
+//        contentUri = uri
+//        getContent.launch("application/json")
+//    }
 
 
 
@@ -43,15 +40,7 @@ class FileBrowser() : AppCompatActivity() {
             startActivity(homeIntent)
         }
 
-        val selectConfigButton: Button = findViewById(R.id.selectConfig)
-        selectConfigButton.setOnClickListener {
-            getContent.launch("application/json")
 
-            if (contentUri.toString() == null){
-                showAlert("get content does not seem to return anything")
-            }
-            showAlert(contentUri.toString())
-        }
     }
 }
 

@@ -9,21 +9,19 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
-import android.opengl.ETC1.decodeImage
 import android.os.Bundle
 import android.os.Parcelable
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import canary.android.utilities.showAlert
 import com.beust.klaxon.Klaxon
-import java.io.BufferedReader
-import java.io.File
 import java.io.IOException
 import java.util.*
 
@@ -96,6 +94,7 @@ abstract class CanaryConfigDatabase : RoomDatabase() {
 
 
 class MainActivity : AppCompatActivity() {
+    var numberTimesRunTest = 1
 
     //should give us a text input popup, cannae get it to proc
     fun showConfigLabelPopup(): String {
@@ -120,11 +119,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val popup = Toast.makeText(this, "HELLO", Toast.LENGTH_SHORT)
+        //textViews
+        var testLogs: TextView = findViewById(R.id.logDisplayField)
+        var numberTestsLabel: TextView = findViewById(R.id.numberOfTestsDisplay)
+        var configName: TextView = findViewById(R.id.SelectedConfigName)
+
+        //buttons:
         val runTestButton: Button = findViewById(R.id.runButton)
-        val browseButton: Button = findViewById(R.id.browseButton)
+        val browseButton: Button = findViewById(R.id.SelectConfigButton)
+        val testMoreButton: Button = findViewById(R.id.testMore)
+        val testLessButton: Button = findViewById(R.id.testLess)
+        val selectConfigButton: Button = findViewById(R.id.SelectConfigButton)
+
+
 
         var logs = "lorem ipsum blah bla blabber"
+        var contentUri:Uri? = null
+        val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            contentUri = uri
+        }
 
         when{
             intent?.action == Intent.ACTION_SEND -> {
@@ -160,8 +173,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         runTestButton.setOnClickListener{
-            popup.show()
-            var testLogs: TextView = findViewById(R.id.logDisplayField)
+            showAlert("performing tests")
             //Canary Library Functionality here. 
             testLogs.text = logs
         }
@@ -169,6 +181,30 @@ class MainActivity : AppCompatActivity() {
         browseButton.setOnClickListener {
             val browseIntent = Intent(this, FileBrowser::class.java)
             startActivity(browseIntent)
+        }
+
+        testMoreButton.setOnClickListener{
+            numberTimesRunTest += 1
+            numberTestsLabel.text = numberTimesRunTest.toString()+" times"
+        }
+
+        testLessButton.setOnClickListener{
+            if(numberTimesRunTest != 1){
+                numberTimesRunTest -= 1
+            }
+
+            numberTestsLabel.text = numberTimesRunTest.toString()+" times"
+            showAlert(numberTimesRunTest.toString())
+        }
+
+        selectConfigButton.setOnClickListener {
+            getContent.launch("application/json")
+            var config = contentUri.toString()
+            if (config == null){
+                showAlert("get content does not seem to return anything")
+            }
+            showAlert(config)
+            configName.text = config
         }
     }
 
