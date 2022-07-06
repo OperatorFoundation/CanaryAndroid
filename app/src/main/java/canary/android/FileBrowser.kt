@@ -13,11 +13,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import canary.android.utilities.showAlert
 
 
 class FileBrowser() : AppCompatActivity() {
+    var contentUri:Uri? = null
     val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        // Handle the returned Uri
+        contentUri = uri
     }
 
 
@@ -45,6 +47,10 @@ class FileBrowser() : AppCompatActivity() {
         selectConfigButton.setOnClickListener {
             getContent.launch("application/json")
 
+            if (contentUri.toString() == null){
+                showAlert("get content does not seem to return anything")
+            }
+            showAlert(contentUri.toString())
         }
     }
 }

@@ -20,7 +20,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import canary.android.utilities.showAlert
 import com.beust.klaxon.Klaxon
+import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -142,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
 
-                    Toast.makeText(this, parsedJson.serverIP, Toast.LENGTH_LONG).show()
+                    showAlert(parsedJson.serverIP)
                     //val configLabel = showConfigLabelPopup()
 
                     val configObject = Config(
@@ -153,17 +155,6 @@ class MainActivity : AppCompatActivity() {
                         parsedJson.serverIP,
                         parsedJson.port
                     )
-
-
-                    val db = Room.databaseBuilder(
-                        applicationContext,
-                        CanaryConfigDatabase::class.java, "ConfigDatabase"
-                    ).build()
-
-
-                    //ConfigDatabaseDao.insert(configObject)
-
-
                 }
             }
         }
@@ -198,17 +189,24 @@ class MainActivity : AppCompatActivity() {
                 }
                 var bufferedReader = streamer.bufferedReader()
                 val jsonString = bufferedReader.use{ it.readText() }
-                val filename = UUID.randomUUID().toString()
+                val filename = UUID.randomUUID().toString() + ".json"
                 streamer = contentResolved.openInputStream(jsonUri)
                 if (streamer == null){
                     return null
                 }
                 bufferedReader = streamer.bufferedReader()
+                //File(filename).writeText(jsonString)
                 applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use { file ->
                     while(true) {
                         try {
                             val b = bufferedReader.read()
                             file.write(b)
+                            if (b == 125){
+                                file.close()
+                                bufferedReader.close()
+                                streamer.close()
+                                break
+                            }
                         } catch (e:IOException){
                             file.close()
                             bufferedReader.close()
