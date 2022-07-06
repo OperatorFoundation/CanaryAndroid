@@ -1,19 +1,14 @@
 package canary.android
 
-import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import canary.android.utilities.showAlert
+import kotlin.coroutines.suspendCoroutine
 
 
 class FileBrowser() : AppCompatActivity() {
@@ -22,20 +17,25 @@ class FileBrowser() : AppCompatActivity() {
         contentUri = uri
     }
 
+    private fun getConfig(context: Context):Uri? {
+        var contentUri:Uri? = null
+        val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            contentUri = uri
+        }
+        return contentUri
+    }
+
+    private suspend fun getConfigSuspend(activity: MainActivity) {
+        val uri = getConfig(applicationContext)
+        contentUri = uri
+        getContent.launch("application/json")
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file_browser)
-
-//        when{ //presumably, we want the intent to show up here.
-//            intent?.action == Intent.ACTION_SEND -> {
-//                if ("application/json" == intent.type) {
-//                    val message = receiveJsonFromExternalShare(intent)
-//                    val configSettingsList = message.split(",")
-//                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-//                }
-//            }
-//        }
 
         val homeButton: Button = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {
@@ -54,6 +54,8 @@ class FileBrowser() : AppCompatActivity() {
         }
     }
 }
+
+
 
 private fun receiveJsonFromExternalShare(intent: Intent): String {
 
