@@ -6,33 +6,32 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import canary.android.utilities.showAlert
+import java.io.File
 import kotlin.coroutines.suspendCoroutine
 
 
 class FileBrowser() : AppCompatActivity() {
-
-
-    private fun getConfig(context: Context):Uri? {
-        var contentUri:Uri? = null
-        val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            contentUri = uri
-        }
-        return contentUri
-    }
-
-//    private suspend fun getConfigSuspend(activity: MainActivity) {
-//        val uri = getConfig(applicationContext)
-//        contentUri = uri
-//        getContent.launch("application/json")
-//    }
-
-
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var fileList: ArrayList<File>
+    private lateinit var fileAdapter: FileAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file_browser)
+
+        recyclerView = findViewById(R.id.fileRecyler)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        fileList = ArrayList()
+        val fileNameList = applicationContext.getFilesDir().list()
+        for (item in fileNameList) fileList.add(File(item))
+
 
         val homeButton: Button = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {

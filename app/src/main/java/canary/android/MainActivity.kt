@@ -22,6 +22,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import canary.android.utilities.showAlert
 import com.beust.klaxon.Klaxon
+import java.io.File
 import java.io.IOException
 import java.util.*
 
@@ -131,7 +132,7 @@ class MainActivity : AppCompatActivity() {
         val testLessButton: Button = findViewById(R.id.testLess)
         val selectConfigButton: Button = findViewById(R.id.SelectConfigButton)
 
-
+        //variables and things
 
         var logs = "lorem ipsum blah bla blabber"
         var contentUri:Uri? = null
@@ -155,10 +156,21 @@ class MainActivity : AppCompatActivity() {
                     if (parsedJson == null) {
                         return
                     }
+                    val path = applicationContext.getFilesDir()
+                    var lsstring = path.list().joinToString(" ")
 
+                    showAlert(lsstring)
 
-                    showAlert(parsedJson.serverIP)
-                    //val configLabel = showConfigLabelPopup()
+//                    var canaryDirectory = File(path, "Let")
+//                    canaryDirectory.mkdirs()
+//                    val configFile = File(canaryDirectory, "config_list.txt")
+//                    if (configFile.readLines().contains(parsedJson.toString())){
+//                        showAlert("this config is already in the list")
+//                        return
+//                    }
+//                    val newConfig = parsedJson.toString() + "\n"
+//                    configFile.appendText(newConfig)
+//                    showAlert("Config Saved to List")
 
                     val configObject = Config(
                         1,
