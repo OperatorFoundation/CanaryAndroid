@@ -211,6 +211,19 @@ class MainActivity : AppCompatActivity() {
             numberTestsLabel.text = numberTimesRunTest.toString()+" times"
             showAlert(numberTimesRunTest.toString())
         }
+
+
+    }
+
+    fun getFileName(): String {
+        if (userSubmittedFileName == null){
+            //get the user to select/input a name for the config
+        }
+        val getFileNameIntent = Intent(this, saveNewConfig::class.java)
+        startActivity((getFileNameIntent))
+        val filename = UUID.randomUUID().toString() + ".json"
+        return filename
+
     }
 
     fun receiveJsonFromExternalShare(intent: Intent): String? {
@@ -230,6 +243,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 var bufferedReader = streamer.bufferedReader()
                 val jsonString = bufferedReader.use{ it.readText() }
+
+                //val filename = getFileName()
                 val filename = UUID.randomUUID().toString() + ".json"
                 streamer = contentResolved.openInputStream(jsonUri)
                 if (streamer == null){
@@ -280,6 +295,7 @@ class MainActivity : AppCompatActivity() {
 //        return configLabel
 //    }
 }
+
 
 
 private fun receiveTextFromExternalShare(intent: Intent): String {

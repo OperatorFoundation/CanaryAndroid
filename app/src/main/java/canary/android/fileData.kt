@@ -1,10 +1,13 @@
 package canary.android
 
+
+var userSelectedConfig: String? = null
+var userSubmittedFileName: String? = null
+var nameOfLinkedFile: String? = null
+
 data class FileData(val filename:String){
 
 }
-
-var userSelectedConfig: String? = null
 
 class JsonConfig(
     val password: String,
