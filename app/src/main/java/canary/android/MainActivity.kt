@@ -42,12 +42,12 @@ data class Config(
     var port: Int
 )
 
-class JsonConfig(
-    val password: String,
-    val cipherName: String,
-    val serverIP: String,
-    val port: Int
-)
+//class JsonConfig(
+//    val password: String,
+//    val cipherName: String,
+//    val serverIP: String,
+//    val port: Int
+//)
 
 
 @Dao
@@ -130,14 +130,17 @@ class MainActivity : AppCompatActivity() {
         val browseButton: Button = findViewById(R.id.SelectConfigButton)
         val testMoreButton: Button = findViewById(R.id.testMore)
         val testLessButton: Button = findViewById(R.id.testLess)
-        val selectConfigButton: Button = findViewById(R.id.SelectConfigButton)
 
         //variables and things
 
         var logs = "lorem ipsum blah bla blabber"
-        var contentUri:Uri? = null
-        val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            contentUri = uri
+
+        //fill the config label or lock tests if no config selected.
+        if(userSelectedConfig == null){
+            configName.text = "please select a config"
+        } else {
+            configName.text = userSelectedConfig
+            //fill our json object from the selected thing.
         }
 
         when{
@@ -207,16 +210,6 @@ class MainActivity : AppCompatActivity() {
 
             numberTestsLabel.text = numberTimesRunTest.toString()+" times"
             showAlert(numberTimesRunTest.toString())
-        }
-
-        selectConfigButton.setOnClickListener {
-            getContent.launch("application/json")
-            var config = contentUri.toString()
-            if (config == null){
-                showAlert("get content does not seem to return anything")
-            }
-            showAlert(config)
-            configName.text = config
         }
     }
 

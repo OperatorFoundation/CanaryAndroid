@@ -13,7 +13,7 @@
         android:layout_marginStart="113dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="156dp"
-        android:text="Return Home"
+        android:text="return_home"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
         android:layout_marginStart="117dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="200dp"
-        android:text="Select Config"
+        android:text="@string/select_config"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fileRecyler"
-        android:layout_width="144dp"
+        android:layout_width="300dp"
         android:layout_height="522dp"
         android:layout_marginTop="47dp"
         app:layout_constraintBottom_toBottomOf="parent"
