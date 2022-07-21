@@ -16,6 +16,9 @@
         android:theme="@style/Theme.CanaryAndroid"
         tools:targetApi="31">
         <activity
+            android:name=".TestResults"
+            android:exported="false" />
+        <activity
             android:name=".saveNewConfig"
             android:exported="true">
             <intent-filter>
@@ -25,12 +28,11 @@
 
                 <data android:mimeType="application/json" />
             </intent-filter>
-        </activity>
-<!--        <activity-->
-<!--            android:name="SaveNewConfig"-->
-<!--            android:exported="false"-->
-<!--            android:label="@string/title_activity_save_new_config"-->
-<!--            android:theme="@style/Theme.CanaryAndroid.NoActionBar" />-->
+        </activity> <!-- <activity -->
+        <!-- android:name="SaveNewConfig" -->
+        <!-- android:exported="false" -->
+        <!-- android:label="@string/title_activity_save_new_config" -->
+        <!-- android:theme="@style/Theme.CanaryAndroid.NoActionBar" /> -->
         <activity
             android:name=".FileBrowser"
             android:exported="false" />

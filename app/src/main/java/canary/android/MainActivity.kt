@@ -164,17 +164,6 @@ class MainActivity : AppCompatActivity() {
 
                     showAlert(lsstring)
 
-//                    var canaryDirectory = File(path, "Let")
-//                    canaryDirectory.mkdirs()
-//                    val configFile = File(canaryDirectory, "config_list.txt")
-//                    if (configFile.readLines().contains(parsedJson.toString())){
-//                        showAlert("this config is already in the list")
-//                        return
-//                    }
-//                    val newConfig = parsedJson.toString() + "\n"
-//                    configFile.appendText(newConfig)
-//                    showAlert("Config Saved to List")
-
                     val configObject = Config(
                         1,
                         "configtest1",
@@ -191,6 +180,8 @@ class MainActivity : AppCompatActivity() {
             showAlert("performing tests")
             //Canary Library Functionality here. 
             testLogs.text = logs
+            val resultsIntent = Intent(this,TestResults::class.java )
+            startActivity(resultsIntent)
         }
 
         browseButton.setOnClickListener {
