@@ -29,6 +29,8 @@ class TestResults : AppCompatActivity() {
         }
 
         browseResultsButton.setOnClickListener{
+            val selectPreviousTestResultIntent = Intent( this, SelectAnotherTestResult::class.java )
+            startActivity(selectPreviousTestResultIntent)
 
         }
     }

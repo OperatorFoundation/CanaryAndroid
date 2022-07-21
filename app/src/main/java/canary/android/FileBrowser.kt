@@ -51,8 +51,6 @@ class FileBrowser() : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-
-
         homeButton.setOnClickListener {
             val homeIntent = Intent(this, MainActivity::class.java)
             startActivity(homeIntent)

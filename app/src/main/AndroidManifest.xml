@@ -16,6 +16,9 @@
         android:theme="@style/Theme.CanaryAndroid"
         tools:targetApi="31">
         <activity
+            android:name=".SelectAnotherTestResult"
+            android:exported="false" />
+        <activity
             android:name=".TestResults"
             android:exported="false" />
         <activity
