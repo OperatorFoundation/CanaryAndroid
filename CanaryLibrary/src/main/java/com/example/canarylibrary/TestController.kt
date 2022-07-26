@@ -12,7 +12,7 @@ class TestController()
     {
         val transportController = TransportController(transport)
 
-//        val connection = Synchronizer.sync(transportController.startTransport) ?: return null
+        val connection = transportController.startTransport()
 //
 //        // Connection test
 //        val connectionTest = TransportConnectionTest(connection, canaryString)

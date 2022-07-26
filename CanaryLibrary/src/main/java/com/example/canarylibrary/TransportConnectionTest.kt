@@ -5,26 +5,26 @@ import java.nio.channels.CompletionHandler
 
 class TransportConnectionTest(transportConnection: Connection, canaryString: String?)
 {
-//    var readBuffer = Byte
+//    var readBuffer = ByteArray()
 
-//    fun send(completionHandler: (NWError) -> Unit)
-//    {
-//
-//    }
+    fun send(): Error?
+    {
+        return null
+    }
 
-//    fun read(completionHandler: (Data) -> Unit)
-//    {
-//
-//    }
+    fun read(): ByteArray
+    {
+        return ByteArray(0)
+    }
 
     fun run(): Boolean
     {
-//        val maybeError = Synchronizer.sync(this.send)
-//        //
-//
-//        val response = Synchronizer.sync(read) ?: return false
-//
-//        //
+        val maybeError = send()
+        //
+
+        val response = read()
+
+        //
 
         return true
     }
