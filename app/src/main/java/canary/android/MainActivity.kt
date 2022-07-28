@@ -10,18 +10,22 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Parcelable
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import canary.android.utilities.showAlert
 import com.beust.klaxon.Klaxon
+import com.example.CanaryLibrary.CanaryConfig
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import org.operatorfoundation.shapeshifter.shadow.kotlin.ShadowConfig
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -94,7 +98,9 @@ abstract class CanaryConfigDatabase : RoomDatabase() {
 }
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()
+{
+    lateinit var logTextView: TextView
     var numberTimesRunTest = 1
 
     //should give us a text input popup, cannae get it to proc
@@ -121,7 +127,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //textViews
-        var testLogs: TextView = findViewById(R.id.logDisplayField)
+        logTextView = findViewById(R.id.logDisplayField)
         var numberTestsLabel: TextView = findViewById(R.id.numberOfTestsDisplay)
         var configName: TextView = findViewById(R.id.SelectedConfigName)
 
@@ -131,9 +137,9 @@ class MainActivity : AppCompatActivity() {
         val testMoreButton: Button = findViewById(R.id.testMore)
         val testLessButton: Button = findViewById(R.id.testLess)
 
-        //variables and things
+        val sampleConfigButton: Button = findViewById(R.id.SampleConfigButton)
 
-        var logs = "lorem ipsum blah bla blabber"
+        //variables and things
 
         //fill the config label or lock tests if no config selected.
         if(userSelectedConfig == null){
@@ -177,11 +183,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         runTestButton.setOnClickListener{
-            showAlert("performing tests")
-            //Canary Library Functionality here. 
-            testLogs.text = logs
-            val resultsIntent = Intent(this,TestResults::class.java )
-            startActivity(resultsIntent)
+            runTests()
         }
 
         browseButton.setOnClickListener {
@@ -203,7 +205,21 @@ class MainActivity : AppCompatActivity() {
             showAlert(numberTimesRunTest.toString())
         }
 
+        sampleConfigButton.setOnClickListener {
+            saveSampleConfigToFile()
+        }
 
+
+    }
+
+    fun runTests()
+    {
+        logTextView.text = "performing tests..."
+
+        //Canary Library Functionality here.
+
+        val resultsIntent = Intent(this,TestResults::class.java )
+        startActivity(resultsIntent)
     }
 
     fun getFileName(): String {
@@ -285,6 +301,53 @@ class MainActivity : AppCompatActivity() {
 //        builder.show()
 //        return configLabel
 //    }
+
+    fun saveSampleConfigToFile()
+    {
+        // TODO: Request permissions
+
+        val shadowConfig = ShadowConfig("password", "DarkStar")
+        val canaryConfig = CanaryConfig<ShadowConfig>("0.0.0.0", 1234, shadowConfig)
+        if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
+        {
+            println("Unable to save the config file: external storage is not available for reading/writing")
+        }
+
+        val extDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+        val saveFile = File(extDir, "canaryShadowConfig.json")
+
+        try
+        {
+            // Make sure the Documents directory exists.
+            extDir.mkdirs()
+
+            if (saveFile.exists())
+            {
+                saveFile.delete()
+            }
+
+            // Make a new csv file for our test results
+            saveFile.createNewFile()
+
+            // The first row should be our labels
+            val jsonString = Json.encodeToString(canaryConfig)
+            saveFile.appendText(jsonString)
+
+            if (saveFile.exists())
+            {
+                showAlert("A sample Canary config has been saved to your phone.")
+            }
+            else
+            {
+                showAlert("We were unable to save a sample Canary config to your phone.")
+            }
+        }
+        catch (error: Exception)
+        {
+            showAlert("We were unable to save a sample Canary config. Error ${error.message}")
+            error.printStackTrace()
+        }
+    }
 }
 
 

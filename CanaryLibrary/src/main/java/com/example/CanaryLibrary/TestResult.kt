@@ -1,4 +1,4 @@
-package com.example.canarylibrary
+package com.example.CanaryLibrary
 
 import java.util.*
 
