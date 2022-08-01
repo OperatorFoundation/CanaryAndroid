@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import canary.android.utilities.shareResults
 
 class TestResults : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,13 +26,12 @@ class TestResults : AppCompatActivity() {
         }
 
         shareButton.setOnClickListener{
-
+            shareResults(this, "FIXME, I need results") //FIXME, put results here
         }
 
         browseResultsButton.setOnClickListener{
             val selectPreviousTestResultIntent = Intent( this, SelectAnotherTestResult::class.java )
             startActivity(selectPreviousTestResultIntent)
-
         }
     }
 }

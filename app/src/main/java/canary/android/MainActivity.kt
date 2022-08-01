@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
+import android.util.Base64.encodeToString
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -21,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import canary.android.utilities.showAlert
+//import com.beust.klaxon.Json
 import com.beust.klaxon.Klaxon
 import com.example.CanaryLibrary.CanaryConfig
 import kotlinx.serialization.encodeToString
@@ -258,7 +260,6 @@ class MainActivity : AppCompatActivity()
                     return null
                 }
                 bufferedReader = streamer.bufferedReader()
-                //File(filename).writeText(jsonString)
                 applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use { file ->
                     while(true) {
                         try {
@@ -286,22 +287,6 @@ class MainActivity : AppCompatActivity()
         return null
     }
 
-//    fun showConfigLabelPopup(): String {
-//        val builder: AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(this)
-//        val input = EditText(this)
-//        var configLabel = "cancel"
-//
-//        input.setHint("what do you want to call this config?")
-//        builder.setView(input)
-//        builder.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-//            // Here you get get input text from the Edittext
-//            configLabel = input.text.toString()
-//        })
-//        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
-//        builder.show()
-//        return configLabel
-//    }
-
     fun saveSampleConfigToFile()
     {
         // TODO: Request permissions
@@ -313,39 +298,40 @@ class MainActivity : AppCompatActivity()
             println("Unable to save the config file: external storage is not available for reading/writing")
         }
 
-        val extDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+        val extDir = applicationContext.getExternalFilesDir(null) //Environment.DIRECTORY_DOCUMENTS
         val saveFile = File(extDir, "canaryShadowConfig.json")
-
-        try
-        {
-            // Make sure the Documents directory exists.
-            extDir.mkdirs()
-
-            if (saveFile.exists())
+        if (extDir != null){
+            try
             {
-                saveFile.delete()
+                // Make sure the Documents directory exists.
+                extDir.mkdirs()
+
+                if (saveFile.exists())
+                {
+                    saveFile.delete()
+                }
+
+                // Make a new csv file for our test results
+                saveFile.createNewFile()
+
+                // The first row should be our labels
+                val jsonString = Json.encodeToString(canaryConfig)
+                saveFile.appendText(jsonString)
+
+                if (saveFile.exists())
+                {
+                    showAlert("A sample Canary config has been saved to your phone.")
+                }
+                else
+                {
+                    showAlert("We were unable to save a sample Canary config to your phone.")
+                }
             }
-
-            // Make a new csv file for our test results
-            saveFile.createNewFile()
-
-            // The first row should be our labels
-            val jsonString = Json.encodeToString(canaryConfig)
-            saveFile.appendText(jsonString)
-
-            if (saveFile.exists())
+            catch (error: Exception)
             {
-                showAlert("A sample Canary config has been saved to your phone.")
+                showAlert("We were unable to save a sample Canary config. Error ${error.message}")
+                error.printStackTrace()
             }
-            else
-            {
-                showAlert("We were unable to save a sample Canary config to your phone.")
-            }
-        }
-        catch (error: Exception)
-        {
-            showAlert("We were unable to save a sample Canary config. Error ${error.message}")
-            error.printStackTrace()
         }
     }
 }
