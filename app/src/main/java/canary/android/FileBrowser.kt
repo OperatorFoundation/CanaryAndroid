@@ -26,7 +26,7 @@ class FileBrowser() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file_browser)
-        Log.i(tag,"oncreate")
+        Log.i(tag,"file Browser view oncreate")
         //buttons
         val homeButton: Button = findViewById(R.id.homeButton)
         val selectConfigButton: Button = findViewById(R.id.selectConfig)
