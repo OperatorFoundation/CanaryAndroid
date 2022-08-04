@@ -1,7 +1,10 @@
-package com.example.CanaryLibrary
+package org.OperatorFoundation.CanaryLibrary
 
 import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
+import org.OperatorFoundation.CanaryLibrary.TestResult
+import org.OperatorFoundation.CanaryLibrary.Transport
+import org.OperatorFoundation.CanaryLibrary.TransportConnectionTest
 import java.io.File
 import java.util.*
 

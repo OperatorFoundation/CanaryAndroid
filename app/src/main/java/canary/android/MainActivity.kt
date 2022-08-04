@@ -13,7 +13,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import canary.android.utilities.showAlert
-import com.example.CanaryLibrary.Canary
+import org.OperatorFoundation.CanaryLibrary.Canary
 import java.io.File
 import java.io.IOException
 import java.util.*

@@ -1,4 +1,4 @@
-package com.example.CanaryLibrary
+package org.OperatorFoundation.CanaryLibrary
 
 import kotlinx.serialization.Serializable
 

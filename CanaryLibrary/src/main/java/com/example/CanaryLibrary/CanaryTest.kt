@@ -1,8 +1,11 @@
-package com.example.CanaryLibrary
+package org.OperatorFoundation.CanaryLibrary
 
+import org.OperatorFoundation.CanaryLibrary.possibleTransportTypes
+import org.OperatorFoundation.CanaryLibrary.testingTransports
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.operatorfoundation.shapeshifter.shadow.kotlin.ShadowConfig
+import org.OperatorFoundation.CanaryLibrary.CanaryConfig
+import org.operatorfoundation.shadowkotlin.ShadowConfig
 import java.io.File
 
 class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDirectory: File? = null)

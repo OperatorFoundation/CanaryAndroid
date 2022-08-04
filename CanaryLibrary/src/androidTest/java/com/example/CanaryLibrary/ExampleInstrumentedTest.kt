@@ -1,12 +1,12 @@
-package com.example.CanaryLibrary
+package org.OperatorFoundation.CanaryLibrary
 
 import android.os.Environment
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Test
 import org.junit.Assert.*
-import org.operatorfoundation.shapeshifter.shadow.kotlin.ShadowConfig
+import org.junit.Test
+import org.operatorfoundation.shadowkotlin.ShadowConfig
 
 class ExampleInstrumentedTest {
     @Test
@@ -43,6 +43,8 @@ class ExampleInstrumentedTest {
 
         assertFalse(chirp.checkSetup())
     }
+
+
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test

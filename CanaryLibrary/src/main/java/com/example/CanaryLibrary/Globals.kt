@@ -1,4 +1,7 @@
-package com.example.CanaryLibrary
+package org.OperatorFoundation.CanaryLibrary
+
+import org.OperatorFoundation.CanaryLibrary.Transport
+import org.OperatorFoundation.CanaryLibrary.TransportType
 
 var testingTransports = arrayOf<Transport>()
 

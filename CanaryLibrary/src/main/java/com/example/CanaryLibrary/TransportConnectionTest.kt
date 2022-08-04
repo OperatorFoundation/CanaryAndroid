@@ -1,7 +1,7 @@
-package com.example.CanaryLibrary
+package org.OperatorFoundation.CanaryLibrary
 
-import org.operatorfoundation.shapeshifter.shadow.kotlin.ShadowConfig
-import org.operatorfoundation.shapeshifter.shadow.kotlin.ShadowSocket
+import org.operatorfoundation.shadowkotlin.ShadowConfig
+import org.operatorfoundation.shadowkotlin.ShadowSocket
 import java.nio.charset.Charset
 
 class TransportConnectionTest(var transport: Transport)

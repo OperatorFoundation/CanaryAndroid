@@ -1,4 +1,4 @@
-package com.example.CanaryLibrary
+package org.OperatorFoundation.CanaryLibrary
 
 class Transport(
     val name: String,
