@@ -43,11 +43,15 @@ class MainActivity : AppCompatActivity()
         //variables and things
 
         //fill the config label or lock tests if no config selected.
-        if(userSelectedConfig == null){
+        if(userSelectedConfigList.count() == 0){
             configName.text = "please select a config"
         } else {
-            configName.text = userSelectedConfig
-            //fill our json object from the selected thing.
+            //parse the names from the config-list and make them pretty for the user
+            var prettyConfigString = ""
+            for (names in userSelectedConfigList){
+                prettyConfigString += names.replace(".json", ", ")
+            }
+            configName.text = prettyConfigString
         }
 
         runTestButton.setOnClickListener{

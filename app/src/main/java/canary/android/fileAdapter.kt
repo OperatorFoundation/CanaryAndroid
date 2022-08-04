@@ -30,15 +30,16 @@ class FileAdapter(private val fileList:ArrayList<FileData>)
             //return to main activity with the data from the json selected
             val selectedColor = ContextCompat.getColor(this.textView.context, R.color.purple_200)
             val unselectedColor = ContextCompat.getColor(this.textView.context, androidx.appcompat.R.color.abc_background_cache_hint_selector_material_dark)
-            this.textView.setBackgroundColor(selectedColor)
+            //this.textView.setBackgroundColor(selectedColor)
 
             userSelectedConfig = this.textView.text.toString()
             if (userSelectedConfigList.contains(userSelectedConfig)){
-                this.textView.setBackgroundColor((unselectedColor))
+                this.view.setBackgroundColor(unselectedColor)
+                //this.textView.setBackgroundColor((unselectedColor))
                 userSelectedConfigList.remove(userSelectedConfig)
             } else {
                 val selectedColor = ContextCompat.getColor(this.textView.context, R.color.purple_200)
-                this.textView.setBackgroundColor(selectedColor)
+                this.view.setBackgroundColor(selectedColor)
                 userSelectedConfigList.add(userSelectedConfig)
 
             }

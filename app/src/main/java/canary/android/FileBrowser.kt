@@ -30,7 +30,6 @@ class FileBrowser() : AppCompatActivity() {
         Log.i(tag,"file Browser view oncreate")
         //buttons
         val homeButton: Button = findViewById(R.id.homeButton)
-        val selectConfigButton: Button = findViewById(R.id.selectConfig)
 
         //var configName: TextView = findViewById(R.id.SelectedConfigName)
         var contentUri:Uri? = null
@@ -53,26 +52,22 @@ class FileBrowser() : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         homeButton.setOnClickListener {
-            val homeIntent = Intent(this, MainActivity::class.java)
-            startActivity(homeIntent)
-        }
-
-        selectConfigButton.setOnClickListener {
-            getContent.launch("application/json")
-            var config = contentUri.toString()
-            if (config == null){
-                showAlert("get content does not seem to return anything")
+            if(userSelectedConfigList.count() > 0){
+                val homeIntent = Intent(this, MainActivity::class.java)
+                startActivity(homeIntent)
+            } else {
+                showAlert("Please select at least one config")
             }
-            showAlert(config)
-            //configName.text = config
         }
+
+//        selectConfigButton.setOnClickListener {
+//            getContent.launch("application/json")
+//            var config = contentUri.toString()
+//            if (config == null){
+//                showAlert("get content does not seem to return anything")
+//            }
+//            showAlert(config)
+//            //configName.text = config
+//        }
     }
-}
-
-
-
-private fun receiveJsonFromExternalShare(intent: Intent): String {
-
-
-    return "mistakes were made"
 }
