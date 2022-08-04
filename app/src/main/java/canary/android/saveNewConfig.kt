@@ -7,13 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.OpenableColumns
+import android.util.Base64.encodeToString
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import java.io.FileNotFoundException
-
-import java.io.IOException
-import java.io.InputStream
+import canary.android.utilities.getAppFolder
+import kotlinx.serialization.json.Json
+import java.io.*
 
 class saveNewConfig : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +35,7 @@ class saveNewConfig : AppCompatActivity() {
                     //val uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_COMPONENT_NAME)
                     nameOfLinkedFile = intent.dataString
                     if (nameOfLinkedFile != null){
-                        val fileNameList = applicationContext.getFilesDir().list()
+                        val fileNameList = getAppFolder().list()
                         if (fileNameList.contains(nameOfLinkedFile)){
                             var count = 2
                             var newName = nameOfLinkedFile + count.toString()
@@ -100,26 +100,50 @@ class saveNewConfig : AppCompatActivity() {
         if (streamer == null) {
             return null
         }
-        val bufferedReader = streamer.bufferedReader()
-        applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use { file ->
-            while (true) {
-                try {
-                    val b = bufferedReader.read()
-                    file.write(b)
-                    if (b == 125) {
-                        file.close()
-                        bufferedReader.close()
-                        streamer.close()
-                        break
-                    }
-                } catch (e: IOException) {
-                    file.close()
-                    bufferedReader.close()
-                    streamer.close()
-                    break
-                }
-            }
+
+        val inputAsString = streamer.bufferedReader().use { it.readText() }
+        val saveFile = File(getAppFolder(), filename)
+        if (saveFile.exists()){
+            saveFile.delete()
         }
+        val createFileSuccess = saveFile.createNewFile()
+        if (createFileSuccess){
+            println("\n created a file: $filename")
+            saveFile.appendText(inputAsString)
+
+        } else {
+            println("\n create file did not succeed \n")
+        }
+
+        // val bufferedReader = streamer.bufferedReader()
+//        applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use { file ->
+//            File file = //...
+//            try(OutputStream outputStream = new FileOutputStream(file)){
+//                IOUtils.copy(streamer, outputStream);
+//            } catch (FileNotFoundException e) {
+//                // handle exception here
+//            } catch (IOException e) {
+//                // handle exception here
+//            }
+//            while (true) {
+//                try {
+//
+//                    val b = bufferedReader.read()
+//                    file.write(b)
+//                    if (b == 125) {
+//                        file.close()
+//                        bufferedReader.close()
+//                        streamer.close()
+//                        break
+//                    }
+//                } catch (e: IOException) {
+//                    file.close()
+//                    bufferedReader.close()
+//                    streamer.close()
+//                    break
+//                }
+//            }
+//        }
 
         return filename
     }

@@ -1,15 +1,14 @@
 package org.OperatorFoundation.CanaryLibrary
 
+import android.content.Context
 import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
-import org.OperatorFoundation.CanaryLibrary.TestResult
-import org.OperatorFoundation.CanaryLibrary.Transport
-import org.OperatorFoundation.CanaryLibrary.TransportConnectionTest
+import org.operatorfoundation.shadowkotlin.ShadowSocket
 import java.io.File
 import java.util.*
 
 
-class TestController()
+class TestController(val configDirectory: File)
 {
     suspend fun runTransportTest(transport: Transport): TestResult?
     {
@@ -36,12 +35,11 @@ class TestController()
             println("Unable to save the results file: external storage is not available for reading/writing")
             return false
         }
+        //Todo find the correct way to get the application local file directory.
 
-        val extDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        val saveFile = File(extDir, resultsFileName)
-
-        // Make sure the Documents directory exists.
-        extDir.mkdirs()
+           // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+        val saveFile = File(configDirectory, resultsFileName)
+        println("\n**attempting to save results to $configDirectory**\n")
 
         if (!saveFile.exists())
         {

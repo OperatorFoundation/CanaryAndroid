@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
 import java.io.File
 import kotlin.coroutines.suspendCoroutine
@@ -38,7 +39,7 @@ class FileBrowser() : AppCompatActivity() {
         }
 
         fileList = ArrayList()
-        val fileNameList = applicationContext.getFilesDir().list()
+        val fileNameList = getAppFolder().list()
         for (item in fileNameList) {
             if (item.contains(".json")){
                 fileList.add(FileData(item))
@@ -65,8 +66,6 @@ class FileBrowser() : AppCompatActivity() {
             showAlert(config)
             //configName.text = config
         }
-
-
     }
 }
 

@@ -17,6 +17,7 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
         // Make sure we have everything we need first
         if (!checkSetup())
         {
+            println("\n checkSetup failed \n")
             return
         }
 
@@ -25,7 +26,7 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
 
     private suspend fun runAllTests()
     {
-        val testController = TestController()
+        val testController = TestController(configDirectory)
 
         for (i in 1..timesToRun)
         {
@@ -70,8 +71,6 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
             return false
         }
 
-        println("\n✔️ Config directory: ${configDirectory.path}\n")
-
         if (!prepareTransports())
         {
             return false
@@ -97,9 +96,11 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
             for (transportType in possibleTransportTypes)
             {
                 // Check each file name to see if it contains the name of a supported transport
+                // eg:: shadow in the filename
                 if (configFile.name.contains(transportType.name, true))
                 {
                     val configString = configFile.readText()
+//                    val shadowC: ShadowConfig = Json.decodeFromString(configString)
                     val canaryConfig: CanaryConfig<ShadowConfig> = Json.decodeFromString(configString)
 
                     val maybeNewTransport = Transport(configFile.name, transportType, canaryConfig)
@@ -109,12 +110,13 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
             }
         }
 
-        if (testingTransports.isEmpty())
+        if (testingTransports.count() == 0)
         {
             println("‼️ There were no valid transport configs in the provided directory. Ending test.\nConfig Directory: $configDirectory.path")
             return false
         }
 
+        println("\n End prepareTransports \n")
         return true
     }
 }

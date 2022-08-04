@@ -19,14 +19,14 @@ class TransportConnectionTest(var transport: Transport)
     suspend fun runShadow(): Boolean
     {
         val shadowConfig: ShadowConfig = transport.config.transportConfig as ShadowConfig
-        val shadowSocket = ShadowSocket(shadowConfig, transport.serverIP, transport.port)
-        println("\n🧩 Launched ${transport.name}. 🧩")
-
-        val shadowOutputStream = shadowSocket.outputStream
-        val shadowInputStream = shadowSocket.inputStream
 
         try
         {
+            val shadowSocket = ShadowSocket(shadowConfig, transport.serverIP, transport.port)
+            println("\n🧩 Launched ${transport.name}. 🧩")
+
+            val shadowOutputStream = shadowSocket.outputStream
+            val shadowInputStream = shadowSocket.inputStream
             println("\n📣 Running a shadow connection test.")
             // Send our http request
             shadowOutputStream.write(textBytes)

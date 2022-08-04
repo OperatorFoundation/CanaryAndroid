@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import canary.android.utilities.showAlert
@@ -23,11 +24,26 @@ class FileAdapter(private val fileList:ArrayList<FileData>)
         init{
             itemView.setOnClickListener(this)
         }
+
+
         override fun onClick(v: View?) {
             //return to main activity with the data from the json selected
+            val selectedColor = ContextCompat.getColor(this.textView.context, R.color.purple_200)
+            val unselectedColor = ContextCompat.getColor(this.textView.context, androidx.appcompat.R.color.abc_background_cache_hint_selector_material_dark)
+            this.textView.setBackgroundColor(selectedColor)
+
             userSelectedConfig = this.textView.text.toString()
-            val homeIntent = Intent(this.view.context, MainActivity::class.java)
-            this.view.context.startActivity(homeIntent)
+            if (userSelectedConfigList.contains(userSelectedConfig)){
+                this.textView.setBackgroundColor((unselectedColor))
+                userSelectedConfigList.remove(userSelectedConfig)
+            } else {
+                val selectedColor = ContextCompat.getColor(this.textView.context, R.color.purple_200)
+                this.textView.setBackgroundColor(selectedColor)
+                userSelectedConfigList.add(userSelectedConfig)
+
+            }
+            //val homeIntent = Intent(this.view.context, MainActivity::class.java)
+            //this.view.context.startActivity(homeIntent)
         }
     }
 

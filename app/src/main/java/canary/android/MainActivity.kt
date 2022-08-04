@@ -12,6 +12,7 @@ import android.os.Environment
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
 import org.OperatorFoundation.CanaryLibrary.Canary
 import java.io.File
@@ -69,7 +70,6 @@ class MainActivity : AppCompatActivity()
             }
 
             numberTestsLabel.text = numberTimesRunTest.toString()+" times"
-            showAlert(numberTimesRunTest.toString())
         }
 
         sampleConfigButton.setOnClickListener {
@@ -83,18 +83,23 @@ class MainActivity : AppCompatActivity()
     fun runTests()
     {
         logTextView.text = "performing tests..."
-
         //Canary Library Functionality here.
-        val canaryInstance = Canary(configDirectoryFile =applicationContext.getFilesDir() , timesToRun = numberTimesRunTest)
-        //canary.runTest()
-        val resultsIntent = Intent(this,TestResults::class.java )
+
+        val canaryConfigDirectory = getAppFolder()
+
+        showAlert(canaryConfigDirectory.toString())
+
+        val canaryInstance = Canary(
+            configDirectoryFile = canaryConfigDirectory,
+            timesToRun = numberTimesRunTest
+        )
+        canaryInstance.runTest()
+        val resultsIntent = Intent(this, TestResults::class.java)
         startActivity(resultsIntent)
     }
 
     fun saveSampleConfigToFile()
     {
-        // TODO: Request permissions
-
         val jsonString = """{"password": "password", "cipherName": "DarkStar", 
                     "serverIP": "0.0.0.0", "port": 1234}
                     """
@@ -103,56 +108,45 @@ class MainActivity : AppCompatActivity()
             println("Unable to save the config file: external storage is not available for reading/writing")
         }
         val filename = "canaryShadowConfig.json"
-        val extDir = applicationContext.getExternalFilesDir(null) //Environment.DIRECTORY_DOCUMENTS
-        val saveFile = File(extDir, "canaryShadowConfig.json")
-        if (extDir != null){
-            println("starting the try in sample config")
-            try
+        val configDir = getAppFolder()
+        val saveFile = File(configDir, "canaryShadowConfig.json")
+
+        println("starting the try in sample config")
+        try
+        {
+            if (saveFile.exists())
             {
-                // Make sure the Documents directory exists.
-                extDir.mkdirs()
-                println("made dir")
+                saveFile.delete()
+            }
 
-                if (saveFile.exists())
-                {
-                    println("deleted safeFile")
-                    saveFile.delete()
-                }
-
-                // Make a new csv file for our test results
-                saveFile.createNewFile()
-
-                // The first row should be our labels
-
-                //write sample config to file
-                applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use { file ->
-                    for(char in jsonString){
-                        try {
-                            val b = char.code
-                            file.write(b)
-                        } catch (e: IOException) {
-                            file.close()
-                            break
-                        }
+            // Make a file for our sample config
+            saveFile.createNewFile()
+            //write sample config to file
+            applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use { file ->
+                for(char in jsonString){
+                    try {
+                        val b = char.code
+                        file.write(b)
+                    } catch (e: IOException) {
+                        file.close()
+                        break
                     }
                 }
+            }
 
-                if (saveFile.exists())
-                {
-                    println("confirmed that saveFile exists")
-                    showAlert("A sample Canary config has been saved to your phone.")
-                }
-                else
-                {
-                    println("did not find the saveFile")
-                    showAlert("We were unable to save a sample Canary config to your phone.")
-                }
-            }
-            catch (error: Exception)
+            if (saveFile.exists())
             {
-                showAlert("We were unable to save a sample Canary config. Error ${error.message}")
-                error.printStackTrace()
+                showAlert("A sample Canary config has been saved to your phone.")
             }
+            else
+            {
+                showAlert("We were unable to save a sample Canary config to your phone.")
+            }
+        }
+        catch (error: Exception)
+        {
+            showAlert("We were unable to save a sample Canary config. Error ${error.message}")
+            error.printStackTrace()
         }
     }
 }
