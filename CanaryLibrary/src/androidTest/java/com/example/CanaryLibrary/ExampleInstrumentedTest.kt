@@ -7,6 +7,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Test
 import org.operatorfoundation.shadowkotlin.ShadowConfig
+import java.io.File
 
 class ExampleInstrumentedTest {
     @Test
@@ -49,7 +50,8 @@ class ExampleInstrumentedTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testController() = runTest {
-        val testController = TestController()
+        val placeholderDirectory = File("NotARealDirectory")
+        val testController = TestController(placeholderDirectory)
         val shadowConfig = ShadowConfig("", "DarkStar")
         val canaryConfig = CanaryConfig<ShadowConfig>("", 1234, shadowConfig)
         val transport = Transport("ShadowExample", TransportType.shadow, canaryConfig)
