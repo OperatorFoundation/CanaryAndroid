@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
 import org.OperatorFoundation.CanaryLibrary.Canary
+import org.OperatorFoundation.CanaryLibrary.resultsFileName
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -55,7 +56,32 @@ class MainActivity : AppCompatActivity()
         }
 
         runTestButton.setOnClickListener{
-            runTests()
+            //create temporary file for configs.
+            val tempConfigFolder = File(getAppFolder(), "tempConfigFolder")
+            if (tempConfigFolder.exists()){
+                tempConfigFolder.deleteRecursively()
+            }
+            tempConfigFolder.mkdir()
+            for (configName in userSelectedConfigList){
+                val configFile = File(getAppFolder(),configName)
+                println("\n configName: $configName")
+                println("\n configFile: $configFile")
+                println("\n tempConfigFolder: $tempConfigFolder")
+                val newFilePrototype = File(tempConfigFolder,  configName)
+                println("\n newFilePrototype: $newFilePrototype")
+                //bigger block to print a list
+
+               //todo: delete these prints, they're just debug stuff
+                configFile.copyTo(newFilePrototype)
+            }
+            println("files in tempFolder:")
+            val tempFileList = tempConfigFolder.list()
+            for (item in tempFileList) {
+                if (item.contains(".json")) {
+                    println("\n config: $item")
+                }
+            }
+            runTests(tempConfigFolder)
         }
 
         browseButton.setOnClickListener {
@@ -84,15 +110,10 @@ class MainActivity : AppCompatActivity()
         val resultsIntent = Intent(this, TestResults::class.java)
     }
 
-    fun runTests()
+    fun runTests(canaryConfigDirectory: File)
     {
         logTextView.text = "performing tests..."
-        //Canary Library Functionality here.
-
-        val canaryConfigDirectory = getAppFolder()
-
         showAlert(canaryConfigDirectory.toString())
-
         val canaryInstance = Canary(
             configDirectoryFile = canaryConfigDirectory,
             timesToRun = numberTimesRunTest
