@@ -7,18 +7,38 @@ package canary.android
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import canary.android.utilities.TestThread
+import canary.android.utilities.Threads
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
+import kotlinx.coroutines.runBlocking
 import org.OperatorFoundation.CanaryLibrary.Canary
 import org.OperatorFoundation.CanaryLibrary.resultsFileName
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlinx.coroutines.*
+import java.io.BufferedInputStream
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+
 
 class MainActivity : AppCompatActivity()
 {
@@ -33,6 +53,9 @@ class MainActivity : AppCompatActivity()
         val numberTestsLabel: TextView = findViewById(R.id.numberOfTestsDisplay)
         val configName: TextView = findViewById(R.id.SelectedConfigName)
 
+        //Image Views
+        val internetTest: ImageView = findViewById(R.id.imageView)
+
         //buttons:
         val runTestButton: Button = findViewById(R.id.runButton)
         val browseButton: Button = findViewById(R.id.SelectConfigButton)
@@ -42,6 +65,12 @@ class MainActivity : AppCompatActivity()
         val showResultsButton: Button = findViewById(R.id.testResultsButton)
 
         //variables and things
+        var internetTestImage: Bitmap?
+        val mWebPath = "https://media.geeksforgeeks.org/wp-content/uploads/20210224040124/JSBinCollaborativeJavaScriptDebugging6-300x160.png"
+
+        //Threading
+        val myExecutor = Executors.newSingleThreadExecutor()
+        val myHandler = Handler(Looper.getMainLooper())
 
         //fill the config label or lock tests if no config selected.
         if(userSelectedConfigList.count() == 0){
@@ -57,6 +86,7 @@ class MainActivity : AppCompatActivity()
 
         runTestButton.setOnClickListener{
             //create temporary file for configs.
+
             val tempConfigFolder = File(getAppFolder(), "tempConfigFolder")
             if (tempConfigFolder.exists()){
                 tempConfigFolder.deleteRecursively()
@@ -64,24 +94,23 @@ class MainActivity : AppCompatActivity()
             tempConfigFolder.mkdir()
             for (configName in userSelectedConfigList){
                 val configFile = File(getAppFolder(),configName)
-                println("\n configName: $configName")
-                println("\n configFile: $configFile")
-                println("\n tempConfigFolder: $tempConfigFolder")
-                val newFilePrototype = File(tempConfigFolder,  configName)
-                println("\n newFilePrototype: $newFilePrototype")
-                //bigger block to print a list
 
-               //todo: delete these prints, they're just debug stuff
+                val newFilePrototype = File(tempConfigFolder,  configName)
                 configFile.copyTo(newFilePrototype)
             }
-            println("files in tempFolder:")
-            val tempFileList = tempConfigFolder.list()
-            for (item in tempFileList) {
-                if (item.contains(".json")) {
-                    println("\n config: $item")
+            logTextView.text = "performing tests..."
+            //thread the internet connection so app doesn't stop it.
+            myExecutor.execute {
+                //library functions here
+                internetTestImage = mLoad(mWebPath)
+                myHandler.post {
+                    internetTest.setImageBitmap(internetTestImage)
                 }
+                runTests(tempConfigFolder)
             }
-            runTests(tempConfigFolder)
+
+            val resultsIntent = Intent(this, TestResults::class.java)
+            //startActivity(resultsIntent)
         }
 
         browseButton.setOnClickListener {
@@ -110,18 +139,41 @@ class MainActivity : AppCompatActivity()
         val resultsIntent = Intent(this, TestResults::class.java)
     }
 
-    fun runTests(canaryConfigDirectory: File)
-    {
-        logTextView.text = "performing tests..."
-        showAlert(canaryConfigDirectory.toString())
+    // Function to establish connection and load image
+    private fun mLoad(string: String): Bitmap? {
+        val url: URL = mStringToURL(string)!!
+        val connection: HttpURLConnection?
+        try {
+            connection = url.openConnection() as HttpURLConnection
+            connection.connect()
+            val inputStream: InputStream = connection.inputStream
+            val bufferedInputStream = BufferedInputStream(inputStream)
+            return BitmapFactory.decodeStream(bufferedInputStream)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
+        }
+        return null
+    }
+
+    // Function to convert string to URL
+    private fun mStringToURL(string: String): URL? {
+        try {
+            return URL(string)
+        } catch (e: MalformedURLException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun runTests(canaryConfigDirectory: File) {
         val canaryInstance = Canary(
             configDirectoryFile = canaryConfigDirectory,
             timesToRun = numberTimesRunTest
         )
         canaryInstance.runTest()
-        val resultsIntent = Intent(this, TestResults::class.java)
-        startActivity(resultsIntent)
     }
+
 
     fun saveSampleConfigToFile()
     {

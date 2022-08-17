@@ -31,7 +31,6 @@ class FileBrowser() : AppCompatActivity() {
         //buttons
         val homeButton: Button = findViewById(R.id.homeButton)
 
-        //var configName: TextView = findViewById(R.id.SelectedConfigName)
         var contentUri:Uri? = null
         val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             contentUri = uri
@@ -52,12 +51,12 @@ class FileBrowser() : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         homeButton.setOnClickListener {
-            if(userSelectedConfigList.count() > 0){
-                val homeIntent = Intent(this, MainActivity::class.java)
-                startActivity(homeIntent)
-            } else {
+            if(userSelectedConfigList.count() < 1){
                 showAlert("Please select at least one config")
             }
+            //return the user home even if they did not select, otherwise they can get stuck here.
+            val homeIntent = Intent(this, MainActivity::class.java)
+            startActivity(homeIntent)
         }
 
 //        selectConfigButton.setOnClickListener {
