@@ -10,7 +10,7 @@ import java.io.File
 
 class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDirectory: File? = null)
 {
-    suspend fun begin()
+    fun begin()
     {
         println("\n attempting to run tests...\n")
 
@@ -24,7 +24,7 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
         runAllTests()
     }
 
-    private suspend fun runAllTests()
+    private  fun runAllTests()
     {
         val testController = TestController(configDirectory)
 

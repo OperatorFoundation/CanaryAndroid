@@ -38,6 +38,8 @@ import java.net.URL
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.concurrent.thread
+
 
 
 class MainActivity : AppCompatActivity()
@@ -66,7 +68,7 @@ class MainActivity : AppCompatActivity()
 
         //variables and things
         var internetTestImage: Bitmap?
-        val mWebPath = "https://media.geeksforgeeks.org/wp-content/uploads/20210224040124/JSBinCollaborativeJavaScriptDebugging6-300x160.png"
+        val mWebPath = "https://media.npr.org/assets/img/2022/07/12/southern-ring-nebula-2-_custom-60c7d16d9c36f085646be2dad4585892c783952d-s2600-c85.webp"
 
         //Threading
         val myExecutor = Executors.newSingleThreadExecutor()
@@ -100,14 +102,18 @@ class MainActivity : AppCompatActivity()
             }
             logTextView.text = "performing tests..."
             //thread the internet connection so app doesn't stop it.
-            myExecutor.execute {
-                //library functions here
-                internetTestImage = mLoad(mWebPath)
-                myHandler.post {
-                    internetTest.setImageBitmap(internetTestImage)
-                }
+            thread(start = true) {
+                //internetTest.setImageBitmap(internetTestImage)
                 runTests(tempConfigFolder)
             }
+//            myExecutor.execute {
+//                //library functions here
+//                internetTestImage = mLoad(mWebPath)
+//                myHandler.post {
+//                    //runTests(tempConfigFolder)
+//                }
+//                //runTests(tempConfigFolder)
+//           }
 
             val resultsIntent = Intent(this, TestResults::class.java)
             //startActivity(resultsIntent)
@@ -178,7 +184,7 @@ class MainActivity : AppCompatActivity()
     fun saveSampleConfigToFile()
     {
         // TODO: Remove IP and Password from sample config before pushing any changes.
-        val jsonString = """{"serverIP":"0.0.0.0","serverPort":1234,"transportConfig":{"password":"password","cipherName":"DarkStar","cipherMode":"DarkStar"}}
+        val jsonString = """{"serverIP":"164.92.71.230","serverPort":1234,"transportConfig":{"password":"9caa4132c724f137c67928e9338c72cfe37e0dd28b298d14d5b5981effa038c9","cipherName":"DarkStar","cipherMode":"DarkStar"}}
                     """
         if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
         {

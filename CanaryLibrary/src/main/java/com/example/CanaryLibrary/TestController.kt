@@ -10,7 +10,7 @@ import java.util.*
 
 class TestController(val configDirectory: File)
 {
-    suspend fun runTransportTest(transport: Transport): TestResult?
+    fun runTransportTest(transport: Transport): TestResult?
     {
         // Connection test
         val connectionTest = TransportConnectionTest(transport)
@@ -58,7 +58,7 @@ class TestController(val configDirectory: File)
         return saveFile.exists()
     }
 
-    suspend fun test(transport: Transport) {
+    fun test(transport: Transport) {
         println("Testing ${transport.name} transport...")
 
         val transportTestResult = runTransportTest(transport)

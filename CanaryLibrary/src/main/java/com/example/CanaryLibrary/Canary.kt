@@ -16,8 +16,9 @@ class Canary(configDirectoryFile: File, timesToRun: Int = 1)
     fun runTest()
     {
         // TODO: Better coroutines
-        MainScope().launch {
-            chirp.begin()
-        }
+        chirp.begin()
+//        MainScope().launch {
+//            chirp.begin()
+//        }
     }
 }

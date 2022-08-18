@@ -1,5 +1,6 @@
 package org.OperatorFoundation.CanaryLibrary
 
+import android.util.Log
 import org.operatorfoundation.shadowkotlin.ShadowConfig
 import org.operatorfoundation.shadowkotlin.ShadowSocket
 import java.nio.charset.Charset
@@ -8,7 +9,7 @@ class TransportConnectionTest(var transport: Transport)
 {
     val textBytes = httpRequestString.toByteArray()
 
-    suspend fun run(): Boolean
+    fun run(): Boolean
     {
         when (transport.transportType)
         {
@@ -16,7 +17,7 @@ class TransportConnectionTest(var transport: Transport)
         }
     }
 
-    suspend fun runShadow(): Boolean
+    fun runShadow(): Boolean
     {
         val shadowConfig: ShadowConfig = transport.config.transportConfig as ShadowConfig
 
@@ -67,6 +68,8 @@ class TransportConnectionTest(var transport: Transport)
         catch (error: Exception)
         {
             println("--> Received an error while attempting to create a connection: $error")
+            //todo remove stacktrace for production
+            Log.d("myapp", Log.getStackTraceString(java.lang.Exception()))
             return false
         }
     }
