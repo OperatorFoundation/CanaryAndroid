@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity()
     fun saveSampleConfigToFile()
     {
         // TODO: Remove IP and Password from sample config before pushing any changes.
-        val jsonString = """{"serverIP":"164.92.71.230","serverPort":1234,"transportConfig":{"password":"9caa4132c724f137c67928e9338c72cfe37e0dd28b298d14d5b5981effa038c9","cipherName":"DarkStar","cipherMode":"DarkStar"}}
+        val jsonString = """{"serverIP":"0.0.0.0","serverPort":5678,"transportConfig":{"password":"password","cipherName":"DarkStar","cipherMode":"DarkStar"}}
                     """
         if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
         {

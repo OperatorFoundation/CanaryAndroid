@@ -19,7 +19,7 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun serializeShadowConfig()
+    fun serializeCanaryConfig()
     {
         val shadowConfig = ShadowConfig("password", "DarkStar")
         val shadowConfigString = Json.encodeToString(shadowConfig)
