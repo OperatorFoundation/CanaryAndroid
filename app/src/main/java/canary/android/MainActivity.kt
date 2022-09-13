@@ -70,10 +70,6 @@ class MainActivity : AppCompatActivity()
         var internetTestImage: Bitmap?
         val mWebPath = "https://media.npr.org/assets/img/2022/07/12/southern-ring-nebula-2-_custom-60c7d16d9c36f085646be2dad4585892c783952d-s2600-c85.webp"
 
-        //Threading
-        val myExecutor = Executors.newSingleThreadExecutor()
-        val myHandler = Handler(Looper.getMainLooper())
-
         //fill the config label or lock tests if no config selected.
         if(userSelectedConfigList.count() == 0){
             configName.text = "please select a config"
@@ -88,35 +84,20 @@ class MainActivity : AppCompatActivity()
 
         runTestButton.setOnClickListener{
             //create temporary file for configs.
-
-            val tempConfigFolder = File(getAppFolder(), "tempConfigFolder")
-            if (tempConfigFolder.exists()){
-                tempConfigFolder.deleteRecursively()
-            }
-            tempConfigFolder.mkdir()
-            for (configName in userSelectedConfigList){
-                val configFile = File(getAppFolder(),configName)
-
-                val newFilePrototype = File(tempConfigFolder,  configName)
-                configFile.copyTo(newFilePrototype)
-            }
+            val tempConfigFolder =  makeTempFolder()
             logTextView.text = "performing tests..."
+
             //thread the internet connection so app doesn't stop it.
             thread(start = true) {
                 //internetTest.setImageBitmap(internetTestImage)
                 runTests(tempConfigFolder)
             }
-//            myExecutor.execute {
-//                //library functions here
-//                internetTestImage = mLoad(mWebPath)
-//                myHandler.post {
-//                    //runTests(tempConfigFolder)
-//                }
-//                //runTests(tempConfigFolder)
-//           }
-
-            val resultsIntent = Intent(this, TestResults::class.java)
-            //startActivity(resultsIntent)
+            if (userSelectedConfigList.size > 0) {
+                val resultsIntent = Intent(this, TestResults::class.java)
+                startActivity(resultsIntent)
+            } else {
+                showAlert("Please select at least one Config to test.")
+            }
         }
 
         browseButton.setOnClickListener {
@@ -141,8 +122,10 @@ class MainActivity : AppCompatActivity()
             saveSampleConfigToFile()
         }
 
-        showResultsButton.setOnClickListener{}
-        val resultsIntent = Intent(this, TestResults::class.java)
+        showResultsButton.setOnClickListener {
+            val resultsIntent = Intent(this, TestResults::class.java)
+            startActivity(resultsIntent)
+        }
     }
 
     // Function to establish connection and load image
@@ -172,6 +155,22 @@ class MainActivity : AppCompatActivity()
         return null
     }
 
+    //function to make or re-make and fill a temporary folder with selected configs
+    private fun makeTempFolder(): File{
+        val tempConfigFolder = File(getAppFolder(), "tempConfigFolder")
+        if (tempConfigFolder.exists()){
+            tempConfigFolder.deleteRecursively()
+        }
+        tempConfigFolder.mkdir()
+        for (configName in userSelectedConfigList){
+            val configFile = File(getAppFolder(),configName)
+
+            val newFilePrototype = File(tempConfigFolder,  configName)
+            configFile.copyTo(newFilePrototype)
+        }
+        return tempConfigFolder
+    }
+
     fun runTests(canaryConfigDirectory: File) {
         val canaryInstance = Canary(
             configDirectoryFile = canaryConfigDirectory,
@@ -185,12 +184,12 @@ class MainActivity : AppCompatActivity()
     {
         // TODO: Remove IP and Password from sample config before pushing any changes.
         val jsonString = """{"serverIP":"0.0.0.0","serverPort":5678,"transportConfig":{"password":"password","cipherName":"DarkStar","cipherMode":"DarkStar"}}
-                    """
+            """
         if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
         {
             println("Unable to save the config file: external storage is not available for reading/writing")
         }
-        val filename = "canaryShadowConfig.json"
+        val filename = "SampleCanaryShadowConfig.json"
         val configDir = getAppFolder()
         val saveFile = File(configDir, "canaryShadowConfig.json")
 

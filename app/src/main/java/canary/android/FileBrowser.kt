@@ -58,15 +58,5 @@ class FileBrowser() : AppCompatActivity() {
             val homeIntent = Intent(this, MainActivity::class.java)
             startActivity(homeIntent)
         }
-
-//        selectConfigButton.setOnClickListener {
-//            getContent.launch("application/json")
-//            var config = contentUri.toString()
-//            if (config == null){
-//                showAlert("get content does not seem to return anything")
-//            }
-//            showAlert(config)
-//            //configName.text = config
-//        }
     }
 }

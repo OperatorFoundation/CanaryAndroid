@@ -17,8 +17,9 @@ class SelectAnotherTestResult : AppCompatActivity() {
         resultsList = ArrayList()
         val fileNameList = applicationContext.getFilesDir().list()
         for (item in fileNameList) {
+            resultsList.add(ResultsData(item))
             if (item.contains(".json")){//FIXME need to change
-                resultsList.add(ResultsData(item))
+
             }
         }
 
