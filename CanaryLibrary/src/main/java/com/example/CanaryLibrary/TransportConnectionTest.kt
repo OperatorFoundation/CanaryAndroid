@@ -68,6 +68,9 @@ class TransportConnectionTest(var transport: Transport)
         catch (error: Exception)
         {
             println("--> Received an error while attempting to create a connection: $error")
+            println("--> Server IP: ${transport.serverIP}")
+            println("--> Server Port: ${transport.port}")
+            println("--> Server Password: ${shadowConfig.password}")
             //todo remove stacktrace for production
             Log.d("myapp", Log.getStackTraceString(java.lang.Exception()))
             return false
