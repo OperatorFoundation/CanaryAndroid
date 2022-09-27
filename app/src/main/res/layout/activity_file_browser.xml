@@ -6,28 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".FileBrowser">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fileRecyler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintBottom_toTopOf="@id/homeButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/homeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="113dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="156dp"
+        android:layout_marginTop="10dp"
         android:text="Use Selected Configs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fileRecyler"
-        android:layout_width="300dp"
-        app:layout_constraintWidth_max="wrap"
-        app:layout_constraintWidth_percent="0.4"
-        android:layout_height="522dp"
-        android:layout_marginTop="47dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fileRecyler"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeButton" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
