@@ -11,35 +11,23 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
-import android.os.Looper
+import android.text.method.ScrollingMovementMethod
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import canary.android.utilities.TestThread
-import canary.android.utilities.Threads
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
-import kotlinx.coroutines.runBlocking
 import org.OperatorFoundation.CanaryLibrary.Canary
-import org.OperatorFoundation.CanaryLibrary.resultsFileName
+import java.io.BufferedInputStream
 import java.io.File
 import java.io.IOException
-import java.util.*
-import kotlinx.coroutines.*
-import java.io.BufferedInputStream
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
-import java.util.concurrent.Executor
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import kotlin.concurrent.thread
-
 
 
 class MainActivity : AppCompatActivity()
@@ -52,6 +40,7 @@ class MainActivity : AppCompatActivity()
 
         //textViews
         logTextView = findViewById(R.id.logDisplayField)
+        logTextView.movementMethod = ScrollingMovementMethod()
         val numberTestsLabel: TextView = findViewById(R.id.numberOfTestsDisplay)
         val configName: TextView = findViewById(R.id.SelectedConfigName)
 

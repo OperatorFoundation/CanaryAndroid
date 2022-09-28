@@ -7,12 +7,12 @@
         <entry key="app/src/main/res/layout/activity_file_browser.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_save_new_config.xml" value="0.13055555555555556" />
-        <entry key="app/src/main/res/layout/activity_select_another_test_result.xml" value="0.12318840579710146" />
+        <entry key="app/src/main/res/layout/activity_select_another_test_result.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_test_results.xml" value="0.25" />
         <entry key="app/src/main/res/layout/file_browser.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.1272644927536232" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.1272644927536232" />
-        <entry key="app/src/main/res/layout/get_config_label.xml" value="0.14427083333333332" />
+        <entry key="app/src/main/res/layout/get_config_label.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_custom_row.xml" value="0.20802919708029197" />
         <entry key="app/src/main/res/layout/reslut_recycler_view.xml" value="0.13652482269503546" />
         <entry key="app/src/main/res/xml/file_browser.xml" value="0.15520833333333334" />
