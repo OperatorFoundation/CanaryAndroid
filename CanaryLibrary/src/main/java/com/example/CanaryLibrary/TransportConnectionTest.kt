@@ -24,6 +24,7 @@ class TransportConnectionTest(var transport: Transport)
         try
         {
             val shadowSocket = ShadowSocket(shadowConfig, transport.serverIP, transport.port)
+//            val testController = TestController(configDirectory)
             println("\n🧩 Launched ${transport.name}. 🧩")
 
             val shadowOutputStream = shadowSocket.outputStream

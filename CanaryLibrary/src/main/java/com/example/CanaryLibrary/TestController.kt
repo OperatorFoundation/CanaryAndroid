@@ -3,8 +3,12 @@ package org.OperatorFoundation.CanaryLibrary
 import android.content.Context
 import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
+import android.os.Environment.MEDIA_MOUNTED_READ_ONLY
+import android.util.Log
 import org.operatorfoundation.shadowkotlin.ShadowSocket
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.*
 
 
@@ -40,6 +44,7 @@ class TestController(val configDirectory: File)
            // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
         val saveFile = File(configDirectory, resultsFileName)
         println("\n**attempting to save results to $configDirectory**\n")
+        println("\n**results file name is: $resultsFileName**\n")
 
         if (!saveFile.exists())
         {
@@ -55,10 +60,28 @@ class TestController(val configDirectory: File)
         val resultString = "${result.testDate}, ${result.hostString}, $testName, ${result.success}\n"
         saveFile.appendText(resultString)
 
+        if (Environment.getExternalStorageState() == MEDIA_MOUNTED)
+        {
+            FileOutputStream(saveFile).use { output ->
+                output.write(resultString.toByteArray())
+            }
+        }
+
+        if (Environment.getExternalStorageState() in setOf(MEDIA_MOUNTED, MEDIA_MOUNTED_READ_ONLY))
+        {
+            FileInputStream(saveFile).use { stream ->
+                val text = stream.bufferedReader().use {
+                    it.readText()
+                }
+                Log.d("TAG", "Loaded: $text")
+            }
+        }
+
         return saveFile.exists()
     }
 
     fun test(transport: Transport) {
+
         println("Testing ${transport.name} transport...")
 
         val transportTestResult = runTransportTest(transport)
