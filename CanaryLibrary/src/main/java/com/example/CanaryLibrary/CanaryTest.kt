@@ -8,7 +8,7 @@ import org.OperatorFoundation.CanaryLibrary.CanaryConfig
 import org.operatorfoundation.shadowkotlin.ShadowConfig
 import java.io.File
 
-class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDirectory: File? = null)
+class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDirectory: File)
 {
     fun begin()
     {
@@ -26,7 +26,7 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
 
     private  fun runAllTests()
     {
-        val testController = TestController(configDirectory)
+        val testController = TestController(configDirectory, saveDirectory)
 
         for (i in 1..timesToRun)
         {

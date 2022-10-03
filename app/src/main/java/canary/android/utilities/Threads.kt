@@ -20,11 +20,12 @@ class TestThread(
     //private val callbackHandler: Handler,
     private val executor: Executor
 ) {
-    public fun runTests(canaryConfigDirectory: File) {
+    public fun runTests(canaryConfigDirectory: File, saveDirectory: File) {
         executor.execute {
             val canaryInstance = Canary(
                 configDirectoryFile = canaryConfigDirectory,
-                timesToRun = numberTimesRunTest
+                timesToRun = numberTimesRunTest,
+                saveDirectory = saveDirectory
             )
             canaryInstance.runTest()
         }

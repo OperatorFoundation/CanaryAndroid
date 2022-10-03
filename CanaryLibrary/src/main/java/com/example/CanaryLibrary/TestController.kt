@@ -12,7 +12,7 @@ import java.io.FileOutputStream
 import java.util.*
 
 
-class TestController(val configDirectory: File)
+class TestController(val configDirectory: File, val saveDirectory: File)
 {
     fun runTransportTest(transport: Transport): TestResult?
     {
@@ -42,8 +42,8 @@ class TestController(val configDirectory: File)
         //Todo find the correct way to get the application local file directory.
 
            // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        val saveFile = File(configDirectory, resultsFileName)
-        println("\n**attempting to save results to $configDirectory**\n")
+        val saveFile = File(saveDirectory, resultsFileName)
+        println("\n**attempting to save results to $saveDirectory**\n")
         println("\n**results file name is: $resultsFileName**\n")
 
         if (!saveFile.exists())
@@ -64,6 +64,7 @@ class TestController(val configDirectory: File)
         {
             FileOutputStream(saveFile).use { output ->
                 output.write(resultString.toByteArray())
+                println("Added result to: $saveFile")
             }
         }
 

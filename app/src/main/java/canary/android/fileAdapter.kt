@@ -35,13 +35,10 @@ class FileAdapter(private val fileList:ArrayList<FileData>)
             if (userSelectedConfigList.contains(userSelectedConfig)){
                 this.view.setBackgroundColor(unselectedColor)
                 this.textView.setBackgroundColor(unselectedColor)
-                //this.textView.setBackgroundColor((unselectedColor))
                 userSelectedConfigList.remove(userSelectedConfig)
             } else {
-                val selectedColor = ContextCompat.getColor(this.textView.context, R.color.purple_200)
                 this.view.setBackgroundColor(selectedColor)
                 userSelectedConfigList.add(userSelectedConfig)
-
             }
         }
     }

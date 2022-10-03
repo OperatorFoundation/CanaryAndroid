@@ -43,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ShareResults" />
 
-    <EditText
+    <TextView
         android:id="@+id/ResultsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,8 +51,6 @@
         android:scrollbarDefaultDelayBeforeFade="@integer/material_motion_duration_long_1"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="@string/show_test_results"
-        android:inputType="textMultiLine"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

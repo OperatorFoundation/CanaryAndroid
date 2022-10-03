@@ -44,9 +44,6 @@ class MainActivity : AppCompatActivity()
         val numberTestsLabel: TextView = findViewById(R.id.numberOfTestsDisplay)
         val configName: TextView = findViewById(R.id.SelectedConfigName)
 
-        //Image Views
-        val internetTest: ImageView = findViewById(R.id.imageView)
-
         //buttons:
         val runTestButton: Button = findViewById(R.id.runButton)
         val browseButton: Button = findViewById(R.id.SelectConfigButton)
@@ -54,10 +51,6 @@ class MainActivity : AppCompatActivity()
         val testLessButton: Button = findViewById(R.id.testLess)
         val sampleConfigButton: Button = findViewById(R.id.SampleConfigButton)
         val showResultsButton: Button = findViewById(R.id.testResultsButton)
-
-        //variables and things
-        var internetTestImage: Bitmap?
-        val mWebPath = "https://media.npr.org/assets/img/2022/07/12/southern-ring-nebula-2-_custom-60c7d16d9c36f085646be2dad4585892c783952d-s2600-c85.webp"
 
         //fill the config label or lock tests if no config selected.
         if(userSelectedConfigList.count() == 0){
@@ -73,18 +66,22 @@ class MainActivity : AppCompatActivity()
 
         runTestButton.setOnClickListener{
             //create temporary file for configs.
-            val tempConfigFolder =  makeTempFolder()
-            logTextView.text = "performing tests..."
+            val tempConfigFolder = makeTempFolder()
 
-            //thread the internet connection so app doesn't stop it.
-            thread(start = true) {
-                //internetTest.setImageBitmap(internetTestImage)
-                runTests(tempConfigFolder)
-            }
             if (userSelectedConfigList.size > 0) {
-                val resultsIntent = Intent(this, TestResults::class.java)
-                startActivity(resultsIntent)
-            } else {
+                logTextView.text = "performing tests..."
+
+                //thread the internet connection so app doesn't stop it.
+                thread(start = true) {
+                    runTests(tempConfigFolder)
+                    runOnUiThread {
+                        val resultsIntent = Intent(this, TestResults::class.java)
+                        startActivity(resultsIntent)
+                    }
+                }
+            }
+            else
+            {
                 showAlert("Please select at least one Config to test.")
             }
         }
@@ -117,33 +114,6 @@ class MainActivity : AppCompatActivity()
         }
     }
 
-    // Function to establish connection and load image
-    private fun mLoad(string: String): Bitmap? {
-        val url: URL = mStringToURL(string)!!
-        val connection: HttpURLConnection?
-        try {
-            connection = url.openConnection() as HttpURLConnection
-            connection.connect()
-            val inputStream: InputStream = connection.inputStream
-            val bufferedInputStream = BufferedInputStream(inputStream)
-            return BitmapFactory.decodeStream(bufferedInputStream)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
-        }
-        return null
-    }
-
-    // Function to convert string to URL
-    private fun mStringToURL(string: String): URL? {
-        try {
-            return URL(string)
-        } catch (e: MalformedURLException) {
-            e.printStackTrace()
-        }
-        return null
-    }
-
     //function to make or re-make and fill a temporary folder with selected configs
     private fun makeTempFolder(): File{
         val tempConfigFolder = File(getAppFolder(), "tempConfigFolder")
@@ -163,7 +133,8 @@ class MainActivity : AppCompatActivity()
     fun runTests(canaryConfigDirectory: File) {
         val canaryInstance = Canary(
             configDirectoryFile = canaryConfigDirectory,
-            timesToRun = numberTimesRunTest
+            timesToRun = numberTimesRunTest,
+            saveDirectory = getAppFolder()
         )
         canaryInstance.runTest()
     }
@@ -207,15 +178,18 @@ class MainActivity : AppCompatActivity()
 
             if (saveFile.exists())
             {
+                // TODO: Should show name of file
                 showAlert("A sample Canary config has been saved to your phone.")
             }
             else
             {
+                // TODO: Should show name of file
                 showAlert("We were unable to save a sample Canary config to your phone.")
             }
         }
         catch (error: Exception)
         {
+            // TODO: Should show name of file
             showAlert("We were unable to save a sample Canary config. Error ${error.message}")
             error.printStackTrace()
         }
