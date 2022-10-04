@@ -8,6 +8,8 @@ import android.widget.TextView
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.shareResults
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TestResults : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,10 +55,11 @@ class TestResults : AppCompatActivity() {
         val fileList = ArrayList<String>()
         val appFolder = getAppFolder()
         val fileNameList = appFolder.list()
+        val currentDate = Calendar.getInstance().time
         println("** Checking App folder for files: $appFolder **")
         for (item in fileNameList) {
             if (item.contains(".csv")){
-                fileList.add(item)
+                fileList.add("$item - $currentDate")
             }
         }
 

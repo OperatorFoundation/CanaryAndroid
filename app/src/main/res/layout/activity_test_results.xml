@@ -45,13 +45,14 @@
 
     <TextView
         android:id="@+id/ResultsView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:scrollbarDefaultDelayBeforeFade="@integer/material_motion_duration_long_1"
+        android:layout_width="350dp"
+        android:layout_height="500dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:gravity="start|top"
         android:minHeight="48dp"
+        android:scrollbarDefaultDelayBeforeFade="@integer/material_motion_duration_long_1"
+        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ReturnHomeFromResults" />
