@@ -39,12 +39,14 @@ class TestController(val configDirectory: File, val saveDirectory: File)
             println("Unable to save the results file: external storage is not available for reading/writing")
             return false
         }
-        //Todo find the correct way to get the application local file directory.
 
-           // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        val saveFile = File(saveDirectory, resultsFileName)
+        val currentDate = Calendar.getInstance().time
+        // TODO: Make date string a valid filename string
+        val dateString = currentDate.toString()
+        val fileNameWithDate = resultsFileName + dateString + resultsFileExtension
+        val saveFile = File(saveDirectory, fileNameWithDate)
         println("\n**attempting to save results to $saveDirectory**\n")
-        println("\n**results file name is: $resultsFileName**\n")
+        println("\n**results file name is: $fileNameWithDate**\n")
 
         if (!saveFile.exists())
         {

@@ -10,13 +10,20 @@ fun Context.showAlert(message: String, length: Int = Toast.LENGTH_LONG)
     Toast.makeText(this, message, length).show()
 }
 
-fun shareResults(context: Context, shareThis: String){
-    val sendIntent: Intent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, shareThis)
-        type = "text/plain" //Fixme format for the type of the results.
-    }
+fun shareResults(context: Context, testResults: String){
+    try
+    {
+        val sendIntent = Intent(Intent.ACTION_SEND).apply{
+            type = "text/csv"
+            putExtra(Intent.EXTRA_TEXT, testResults)
+        }
 
-    val shareIntent = Intent.createChooser(sendIntent, null)
-    context.startActivity(shareIntent)
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        context.startActivity(shareIntent)
+    }
+    catch (exception: Exception)
+    {
+        context.showAlert("Share results failed. Error: $exception")
+        return
+    }
 }

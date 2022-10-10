@@ -7,26 +7,17 @@ package canary.android
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.text.method.ScrollingMovementMethod
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
 import org.OperatorFoundation.CanaryLibrary.Canary
-import java.io.BufferedInputStream
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.MalformedURLException
-import java.net.URL
 import kotlin.concurrent.thread
 
 
@@ -75,7 +66,7 @@ class MainActivity : AppCompatActivity()
                 thread(start = true) {
                     runTests(tempConfigFolder)
                     runOnUiThread {
-                        val resultsIntent = Intent(this, TestResults::class.java)
+                        val resultsIntent = Intent(this, TestResultsActivity::class.java)
                         startActivity(resultsIntent)
                     }
                 }
@@ -87,7 +78,7 @@ class MainActivity : AppCompatActivity()
         }
 
         browseButton.setOnClickListener {
-            val browseIntent = Intent(this, FileBrowser::class.java)
+            val browseIntent = Intent(this, ConfigFilesActivity::class.java)
             startActivity(browseIntent)
         }
 
@@ -109,7 +100,7 @@ class MainActivity : AppCompatActivity()
         }
 
         showResultsButton.setOnClickListener {
-            val resultsIntent = Intent(this, TestResults::class.java)
+            val resultsIntent = Intent(this, TestResultsActivity::class.java)
             startActivity(resultsIntent)
         }
     }

@@ -1,28 +1,24 @@
 package canary.android
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
-import java.io.File
-import kotlin.coroutines.suspendCoroutine
 
 
-class FileBrowser() : AppCompatActivity() {
+class ConfigFilesActivity() : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var fileList: ArrayList<FileData>
-    private lateinit var fileAdapter: FileAdapter
+    private lateinit var fileList: ArrayList<ConfigFileData>
+    private lateinit var fileAdapter: ConfigFileAdapter
 
-    private val tag = "file browser"
+    private val tag = "config file browser"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +36,12 @@ class FileBrowser() : AppCompatActivity() {
         val fileNameList = getAppFolder().list()
         for (item in fileNameList) {
             if (item.contains(".json")){
-                fileList.add(FileData(item))
+                fileList.add(ConfigFileData(item))
             }
         }
 
         recyclerView = findViewById(R.id.fileRecyler)
-        fileAdapter = FileAdapter(fileList)
+        fileAdapter = ConfigFileAdapter(fileList)
         recyclerView.adapter = fileAdapter
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
