@@ -1,21 +1,21 @@
 package canary.android
 
+import android.app.Application
 import android.content.Intent
+import android.content.Intent.ACTION_VIEW
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.shareResults
-import canary.android.utilities.showAlert
 import java.io.File
 import kotlin.collections.ArrayList
 
 class TestResultsActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var fileList: ArrayList<ResultsData>
     private lateinit var fileAdapter: TestResultsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +26,7 @@ class TestResultsActivity : AppCompatActivity() {
         val homeButton: Button = findViewById(R.id.ReturnHomeFromResults)
         val shareButton: Button = findViewById(R.id.ShareResults)
         val viewResultsButton: Button = findViewById(R.id.ViewResults)
-
-        fileList = getResultFileNames()
+        val fileList: ArrayList<File> = getResultFiles()
         recyclerView = findViewById(R.id.resultsRecyclerView)
         fileAdapter = TestResultsAdapter(fileList)
         recyclerView.adapter = fileAdapter
@@ -40,37 +39,48 @@ class TestResultsActivity : AppCompatActivity() {
         }
 
         shareButton.setOnClickListener{
-            if (userSelectedResult.isNotEmpty())
+            if (userSelectedResult != null)
             {
                 // TODO: Add try/catch block
-                val resultFile = File(getAppFolder(), userSelectedResult)
-                if (resultFile.exists())
-                {
-                    // TODO: Find out how to get the entire contents of file.
-                    val resultString = resultFile.readText()
-                    shareResults(this, resultString)
-                }
+                val resultURI = FileProvider.getUriForFile(applicationContext, "canary.android.fileprovider", userSelectedResult!!)
+                println("Result URI is: ${resultURI.path}")
+                shareResults(this, resultURI)
             }
 
 
         }
 
         viewResultsButton.setOnClickListener{
-            val resultsViewerIntent = Intent(this, ResultsViewer::class.java)
-            startActivity(resultsViewerIntent)
+            openFile()
         }
     }
 
-    fun getResultFileNames(): ArrayList<ResultsData>
+    private fun openFile()
     {
-        val fileList = ArrayList<ResultsData>()
-        val appFolder = getAppFolder()
-        val fileNameList = appFolder.list()
-        println("** Checking App folder for files: $appFolder **")
-        for (item in fileNameList) {
-            if (item.contains(".csv")){
-                val thisResult = ResultsData(item)
-                fileList.add(thisResult)
+        if (userSelectedResult != null)
+        {
+            val packageName = applicationContext.packageName
+            val resultURI = FileProvider.getUriForFile(applicationContext, "$packageName.fileprovider", userSelectedResult!!)
+            val viewIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            viewIntent.setDataAndType(resultURI, "text/csv")
+            viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//            viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivity(viewIntent)
+        }
+    }
+
+    fun getResultFiles(): ArrayList<File>
+    {
+        val fileList = ArrayList<File>()
+        var resultsFiles: Array<File> = filesDir.listFiles()
+
+        println("&&& Printing Results Files &&&")
+        for (thisFile in resultsFiles)
+        {
+            println(thisFile.name)
+            if (thisFile.name.contains(".csv"))
+            {
+                fileList.add(thisFile)
             }
         }
 

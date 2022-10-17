@@ -10,42 +10,44 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/resultsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/ShareResults"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="150dp"
+        android:scrollbars="vertical"
+        android:textAlignment="center"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/ViewResults"
+        tools:layout_editor_absoluteX="-23dp" />
 
     <Button
-        android:id="@+id/ReturnHomeFromResults"
+        android:id="@+id/ViewResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Home"
+        android:text="@string/view_results"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/ShareResults"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ShareResults"
-        app:layout_constraintBottom_toTopOf="@+id/ViewResults"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/ShareResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Share"
+        android:text="@string/share"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/ReturnHomeFromResults"/>
 
     <Button
-        android:id="@+id/ViewResults"
+        android:id="@+id/ReturnHomeFromResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="View Results"
+        android:layout_marginTop="12dp"
+        android:text="@string/home"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

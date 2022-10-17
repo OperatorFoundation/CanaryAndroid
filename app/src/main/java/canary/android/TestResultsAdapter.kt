@@ -8,13 +8,15 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import canary.android.utilities.showAlert
+import java.io.File
 
-class TestResultsAdapter(private val fileList:ArrayList<ResultsData>): RecyclerView.Adapter<TestResultsAdapter.FileViewHolder>()
+class TestResultsAdapter(val fileList:ArrayList<File>): RecyclerView.Adapter<TestResultsAdapter.FileViewHolder>()
 {
     class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener
     {
         val textView: TextView = itemView.findViewById(R.id.config_menu_object)
         private var view: View = itemView
+        var resultFile: File? = null
 
         init
         {
@@ -26,16 +28,16 @@ class TestResultsAdapter(private val fileList:ArrayList<ResultsData>): RecyclerV
             val selectedColor = ContextCompat.getColor(this.textView.context, R.color.purple_200)
             val unselectedColor = ContextCompat.getColor(this.textView.context, androidx.appcompat.R.color.abc_background_cache_hint_selector_material_dark)
 
-            if (this.textView.text.toString() == userSelectedResult)
+            if (userSelectedResult != null && this.textView.text.toString() == userSelectedResult!!.name)
             {
                 this.view.setBackgroundColor(unselectedColor)
                 this.textView.setBackgroundColor(unselectedColor)
-                userSelectedResult = ""
+                userSelectedResult = null
             }
             else
             {
                 this.view.setBackgroundColor(selectedColor)
-                userSelectedResult = this.textView.text.toString()
+                userSelectedResult = resultFile
             }
         }
     }
@@ -47,7 +49,8 @@ class TestResultsAdapter(private val fileList:ArrayList<ResultsData>): RecyclerV
 
     override fun onBindViewHolder(holder: FileViewHolder, position: Int) {
         val file = fileList[position]
-        holder.textView.text = file.filename
+        holder.textView.text = file.name
+        holder.resultFile = file
     }
 
     override fun getItemCount(): Int {
