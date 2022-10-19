@@ -41,8 +41,7 @@ class TestController(val configDirectory: File, val saveDirectory: File)
         }
 
         val currentDate = Calendar.getInstance().time
-        // TODO: Make date string a valid filename string
-        val dateString = currentDate.toString()
+        val dateString = currentDate.toString().replace(":", "").filter { !it.isWhitespace() }
         val fileNameWithDate = resultsFileName + dateString + resultsFileExtension
         val saveFile = File(saveDirectory, fileNameWithDate)
         println("\n**attempting to save results to $saveDirectory**\n")

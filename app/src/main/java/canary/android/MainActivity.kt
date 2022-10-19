@@ -169,19 +169,16 @@ class MainActivity : AppCompatActivity()
 
             if (saveFile.exists())
             {
-                // TODO: Should show name of file
-                showAlert("A sample Canary config has been saved to your phone.")
+                showAlert("The $filename config has been saved to your phone.")
             }
             else
             {
-                // TODO: Should show name of file
-                showAlert("We were unable to save a sample Canary config to your phone.")
+                showAlert("We were unable to save the $filename config to your phone.")
             }
         }
         catch (error: Exception)
         {
-            // TODO: Should show name of file
-            showAlert("We were unable to save a sample Canary config. Error ${error.message}")
+            showAlert("We were unable to save the $filename config. Error ${error.message}")
             error.printStackTrace()
         }
     }
