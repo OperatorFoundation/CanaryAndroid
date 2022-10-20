@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity()
         val serverIP = json.get("serverIP")
         val port = json.get("port")
         val password = json.get("password")
-        val jsonString = """{"serverIP:":"$serverIP", "serverPort":$port,"transportConfig":{"password":"$password","cipherName":"DarkStar","cipherMode":"DarkStar"}}
+        val jsonString = """{"serverIP":"$serverIP", "port":$port,"transportConfig":{"password":"$password","cipherName":"DarkStar","cipherMode":"DarkStar"}}
         """.trimMargin()
         val newConfigName = "temp" + configName
         val newFilePrototype = File(tempConfigFolder, newConfigName)
