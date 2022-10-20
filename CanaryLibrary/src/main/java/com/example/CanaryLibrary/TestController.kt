@@ -10,6 +10,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.*
+import java.text.SimpleDateFormat
 
 
 class TestController(val configDirectory: File, val saveDirectory: File)
@@ -40,8 +41,14 @@ class TestController(val configDirectory: File, val saveDirectory: File)
             return false
         }
 
-        val currentDate = Calendar.getInstance().time
-        val dateString = currentDate.toString().replace(":", "").filter { !it.isWhitespace() }
+        val currentDate = Calendar.getInstance()
+        val day: SimpleDateFormat = SimpleDateFormat("dd")
+        val month: SimpleDateFormat = SimpleDateFormat("MM")
+        val year : SimpleDateFormat = SimpleDateFormat("yyyy")
+        val daystring = day.format(currentDate.time).toString()
+        val monthString = month.format(currentDate.time).toString()
+        val yearString = year.format(currentDate.time).toString()
+        val dateString = yearString + "_" + monthString + "_" + daystring
         val fileNameWithDate = resultsFileName + dateString + resultsFileExtension
         val saveFile = File(saveDirectory, fileNameWithDate)
         println("\n**attempting to save results to $saveDirectory**\n")
