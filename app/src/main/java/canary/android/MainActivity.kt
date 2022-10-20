@@ -16,8 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
 import org.OperatorFoundation.CanaryLibrary.Canary
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import kotlin.concurrent.thread
 
 
@@ -113,10 +115,21 @@ class MainActivity : AppCompatActivity()
         }
         tempConfigFolder.mkdir()
         for (configName in userSelectedConfigList){
-            val configFile = File(getAppFolder(),configName)
+            if (configName.contains("shadow", ignoreCase = true)){
+                //ToDo Remove convertShadowConfigtoNested if android library gets its json handler
+                //fixed to be more in line with the linux and iOS version.
+               val newName = convertShadowConfigToNested(configName, tempConfigFolder)
+                val configFile = File(getAppFolder(),newName)
 
-            val newFilePrototype = File(tempConfigFolder,  configName)
-            configFile.copyTo(newFilePrototype)
+                val newFilePrototype = File(tempConfigFolder,  configName)
+                configFile.copyTo(newFilePrototype) //new file prototpye shouldn't have temp prefix
+                configFile.delete()
+            } else{
+                val configFile = File(getAppFolder(),configName)
+
+                val newFilePrototype = File(tempConfigFolder,  configName)
+                configFile.copyTo(newFilePrototype)
+            }
         }
         return tempConfigFolder
     }
@@ -129,7 +142,34 @@ class MainActivity : AppCompatActivity()
         )
         canaryInstance.runTest()
     }
+    fun convertShadowConfigToNested(configName: String, tempConfigFolder: File): String{
+        //val inputStream: InputStream = File(configName).inputStream()
+        if (!File(getAppFolder(), configName).exists()){
+            showAlert("$configName was not found")
+        }
+        val inputString = File(getAppFolder(), configName).bufferedReader().readLines()
+        val json = JSONObject(inputString[0])
+        val serverIP = json.get("serverIP")
+        val port = json.get("port")
+        val password = json.get("password")
+        val jsonString = """{"serverIP:":"$serverIP", "serverPort":$port,"transportConfig":{"password":"$password","cipherName":"DarkStar","cipherMode":"DarkStar"}}
+        """.trimMargin()
+        val newConfigName = "temp" + configName
+        val newFilePrototype = File(tempConfigFolder, newConfigName)
 
+        applicationContext.openFileOutput(newConfigName, Context.MODE_PRIVATE).use { file ->
+            for(char in jsonString){
+                try {
+                    val b = char.code
+                    file.write(b)
+                } catch (e: IOException) {
+                    file.close()
+                    break
+                }
+            }
+        }
+        return newConfigName
+    }
 
     fun saveSampleConfigToFile()
     {

@@ -16,7 +16,7 @@ class Transport(
             TransportType.shadow ->
             {
                 serverIP = config.serverIP
-                port = config.serverPort
+                port = config.port
             }
         }
     }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
+import java.io.File
 
 
 class ConfigFilesActivity() : AppCompatActivity() {
@@ -26,6 +27,7 @@ class ConfigFilesActivity() : AppCompatActivity() {
         Log.i(tag,"file Browser view oncreate")
         //buttons
         val homeButton: Button = findViewById(R.id.homeButton)
+        val deleteConfigButton: Button = findViewById(R.id.DeleteConfigs)
 
         var contentUri:Uri? = null
         val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -53,6 +55,18 @@ class ConfigFilesActivity() : AppCompatActivity() {
             //return the user home even if they did not select, otherwise they can get stuck here.
             val homeIntent = Intent(this, MainActivity::class.java)
             startActivity(homeIntent)
+        }
+
+        deleteConfigButton.setOnClickListener{
+            if(userSelectedConfigList.count() < 1){
+                showAlert("Please select at least one config")
+            }
+            for (config in userSelectedConfigList){
+                val deleteThis = File(getAppFolder(), config)
+                deleteThis.delete()
+            }
+            finish()
+            startActivity(getIntent())
         }
     }
 }

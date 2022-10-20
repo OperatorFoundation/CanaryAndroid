@@ -13,12 +13,12 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="21dp"
         android:layout_marginEnd="38dp"
-        android:layout_marginBottom="389dp"
+        android:layout_marginBottom="332dp"
         android:text="Save and Continue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cancel_new_config_button"
-        app:layout_constraintTop_toBottomOf="@+id/new_config_file_name" />
+        app:layout_constraintTop_toBottomOf="@+id/filename_input" />
 
     <Button
         android:id="@+id/cancel_new_config_button"
@@ -27,12 +27,12 @@
         android:layout_marginStart="38dp"
         android:layout_marginTop="21dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="388dp"
+        android:layout_marginBottom="332dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/save_new_config_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_config_file_name" />
+        app:layout_constraintTop_toBottomOf="@+id/filename_input" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/new_config_file_name"
@@ -49,15 +49,16 @@
     <TextView
         android:id="@+id/config_name_prompt"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="165dp"
+        android:layout_marginTop="208dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="21dp"
         android:text="Please Name This Config"
         android:textSize="34sp"
-        app:layout_constraintBottom_toTopOf="@+id/new_config_file_name"
+        app:layout_constraintBottom_toTopOf="@+id/filename_input"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,7 +66,10 @@
         android:id="@+id/filename_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:layout_marginBottom="32dp"
         android:hint="hint"
+        app:layout_constraintBottom_toTopOf="@+id/save_new_config_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/config_name_prompt" />
