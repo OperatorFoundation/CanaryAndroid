@@ -10,11 +10,5 @@ var userSelectedResult: File? = null
 var numberTimesRunTest = 1
 val userSelectedConfigList = arrayListOf<String>()
 
-data class ConfigFileData(val filename:String){
-    val selected = false
-}
-
-data class ResultsData(val filename:String){
-
-}
+data class ConfigFileData(val filename:String)
 

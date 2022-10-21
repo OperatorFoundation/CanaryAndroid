@@ -5,26 +5,25 @@ import org.operatorfoundation.shadowkotlin.ShadowConfig
 import org.operatorfoundation.shadowkotlin.ShadowSocket
 import java.nio.charset.Charset
 
-class TransportConnectionTest(var transport: Transport)
+class TransportConnectionTest(private var transport: Transport)
 {
-    val textBytes = httpRequestString.toByteArray()
+    private val textBytes = httpRequestString.toByteArray()
 
     fun run(): Boolean
     {
         when (transport.transportType)
         {
-            TransportType.shadow -> return runShadow()
+            TransportType.Shadow -> return runShadow()
         }
     }
 
-    fun runShadow(): Boolean
+    private fun runShadow(): Boolean
     {
-        val shadowConfig: ShadowConfig = transport.config.transportConfig as ShadowConfig
+        val shadowConfig: ShadowConfig = transport.config as ShadowConfig
 
         try
         {
             val shadowSocket = ShadowSocket(shadowConfig, transport.serverIP, transport.port)
-//            val testController = TestController(configDirectory)
             println("\n🧩 Launched ${transport.name}. 🧩")
 
             val shadowOutputStream = shadowSocket.outputStream
@@ -43,16 +42,16 @@ class TransportConnectionTest(var transport: Transport)
             if (numberOfBytesRead > 0)
             {
                 val responseString = buffer.toString(Charset.defaultCharset())
-                if (responseString.contains(canaryString))
+
+                return if (responseString.contains(canaryString))
                 {
                     println("\n💕 🐥 It works! 🐥 💕")
-                    return true
+                    true
                 }
-                else
-                {
+                else {
                     println("\n🖤  We connected but the data did not match. 🖤")
                     println("\nHere's what we got back instead of what we expected: $responseString\n")
-                    return false
+                    false
                 }
             }
             else if (numberOfBytesRead == -1)

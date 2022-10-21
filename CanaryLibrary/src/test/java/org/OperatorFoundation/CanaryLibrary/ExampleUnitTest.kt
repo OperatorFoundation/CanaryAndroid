@@ -3,7 +3,6 @@ package org.OperatorFoundation.CanaryLibrary
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.operatorfoundation.shadowkotlin.ShadowConfig
 
@@ -12,12 +11,8 @@ import org.operatorfoundation.shadowkotlin.ShadowConfig
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
-
+class ExampleUnitTest
+{
     @Test
     fun serializeCanaryConfig()
     {
@@ -26,12 +21,7 @@ class ExampleUnitTest {
         println("\n*** Example Shadow Config JSON ***")
         println("$shadowConfigString\n")
 
-        val canaryConfig: CanaryConfig<ShadowConfig> = CanaryConfig("0.0.0.0", 1234, shadowConfig)
-        val canaryConfigString = Json.encodeToString(canaryConfig)
-        println("*** Example Canary Config JSON ***")
-        println("$canaryConfigString\n")
-
-        val configFromJson: CanaryConfig<ShadowConfig> = Json.decodeFromString(canaryConfigString)
-        assert(configFromJson.transportConfig.password == canaryConfig.transportConfig.password)
+        val configFromJson: ShadowConfig = Json.decodeFromString(shadowConfigString)
+        assert(configFromJson.password == shadowConfig.password)
     }
 }

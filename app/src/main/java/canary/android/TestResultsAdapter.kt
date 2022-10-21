@@ -1,13 +1,11 @@
 package canary.android
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import canary.android.utilities.showAlert
 import java.io.File
 
 class TestResultsAdapter(val fileList:ArrayList<File>): RecyclerView.Adapter<TestResultsAdapter.FileViewHolder>()
@@ -28,17 +26,18 @@ class TestResultsAdapter(val fileList:ArrayList<File>): RecyclerView.Adapter<Tes
             val selectedColor = ContextCompat.getColor(this.textView.context, R.color.purple_200)
             val unselectedColor = ContextCompat.getColor(this.textView.context, androidx.appcompat.R.color.abc_background_cache_hint_selector_material_dark)
 
-            if (userSelectedResult != null && this.textView.text.toString() == userSelectedResult!!.name)
-            {
-                this.view.setBackgroundColor(unselectedColor)
-                this.textView.setBackgroundColor(unselectedColor)
-                userSelectedResult = null
-            }
-            else
-            {
-                this.view.setBackgroundColor(selectedColor)
-                userSelectedResult = resultFile
-            }
+            userSelectedResult =
+                if (userSelectedResult != null && this.textView.text.toString() == userSelectedResult!!.name)
+                {
+                    this.view.setBackgroundColor(unselectedColor)
+                    this.textView.setBackgroundColor(unselectedColor)
+                    null
+                }
+                else
+                {
+                    this.view.setBackgroundColor(selectedColor)
+                    resultFile
+                }
         }
     }
 

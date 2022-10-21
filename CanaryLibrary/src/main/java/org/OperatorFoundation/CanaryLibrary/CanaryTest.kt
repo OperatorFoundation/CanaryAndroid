@@ -1,32 +1,29 @@
 package org.OperatorFoundation.CanaryLibrary
 
-import org.OperatorFoundation.CanaryLibrary.possibleTransportTypes
-import org.OperatorFoundation.CanaryLibrary.testingTransports
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import org.OperatorFoundation.CanaryLibrary.CanaryConfig
-import org.operatorfoundation.shadowkotlin.ShadowConfig
 import java.io.File
 
-class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDirectory: File)
+class CanaryTest(private val configDirectory: File, private val timesToRun: Int = 1, private var saveDirectory: File)
 {
     fun begin()
     {
         println("\n attempting to run tests...\n")
 
         // Make sure we have everything we need first
-        if (!checkSetup())
+        if (checkSetup())
         {
-            println("\n checkSetup failed \n")
+            println("✔️ Canary setup complete")
+            runAllTests()
+        }
+        else
+        {
+            println("\n‼️ Canary setup failed \n")
             return
         }
-
-        runAllTests()
     }
 
     private  fun runAllTests()
     {
-        val testController = TestController(configDirectory, saveDirectory)
+        val testController = TestController(saveDirectory)
 
         for (i in 1..timesToRun)
         {
@@ -42,22 +39,19 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
 
     fun checkSetup(): Boolean
     {
-        if (saveDirectory != null)
+        // Does the save directory exist?
+        if (!saveDirectory.exists())
         {
-            // Does the save directory exist?
-            if (!saveDirectory!!.exists())
-            {
-                println("\n‼️ The selected save directory does not exist at ${saveDirectory!!.path}.\n")
-                return false
-            }
-            else if (!saveDirectory!!.isDirectory)
-            {
-                println("\n‼️ The selected save directory is not a directory. Please select a directory for saving your results. \nSelected path: ${saveDirectory!!.path}.\n")
-                return false
-            }
-
-            println("\n✔️ User selected save directory: ${saveDirectory!!.path}\n")
+            println("\n‼️ The selected save directory does not exist at ${saveDirectory.path}.\n")
+            return false
         }
+        else if (!saveDirectory.isDirectory)
+        {
+            println("\n‼️ The selected save directory is not a directory. Please select a directory for saving your results. \nSelected path: ${saveDirectory.path}.\n")
+            return false
+        }
+
+        println("\n✔️ User selected save directory: ${saveDirectory.path}\n")
 
         // Does the Config Directory Exist?
         if (!configDirectory.exists())
@@ -71,13 +65,7 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
             return false
         }
 
-        if (!prepareTransports())
-        {
-            return false
-        }
-
-        println("✔️ Check setup complete")
-        return true
+        return prepareTransports()
     }
 
     private fun prepareTransports(): Boolean
@@ -99,18 +87,14 @@ class CanaryTest(val configDirectory: File, val timesToRun: Int = 1, var saveDir
                 // eg:: shadow in the filename
                 if (configFile.name.contains(transportType.name, true))
                 {
-                    val configString = configFile.readText()
-//                    val shadowC: ShadowConfig = Json.decodeFromString(configString)
-                    val canaryConfig: CanaryConfig<ShadowConfig> = Json.decodeFromString(configString)
-
-                    val maybeNewTransport = Transport(configFile.name, transportType, canaryConfig)
+                    val maybeNewTransport = Transport(configFile.name, transportType, configFile)
                     testingTransports += maybeNewTransport
                     println("\n✔️ ${maybeNewTransport.name} test is ready\n")
                 }
             }
         }
 
-        if (testingTransports.count() == 0)
+        if (testingTransports.isEmpty())
         {
             println("‼️ There were no valid transport configs in the provided directory. Ending test.\nConfig Directory: $configDirectory.path")
             return false

@@ -5,7 +5,6 @@
 
 package canary.android
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
@@ -15,13 +14,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import canary.android.utilities.getAppFolder
 import canary.android.utilities.showAlert
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.OperatorFoundation.CanaryLibrary.Canary
-import org.json.JSONObject
+import org.operatorfoundation.shadowkotlin.ShadowConfig
 import java.io.File
-import java.io.IOException
-import java.io.InputStream
 import kotlin.concurrent.thread
-
 
 class MainActivity : AppCompatActivity()
 {
@@ -46,14 +44,19 @@ class MainActivity : AppCompatActivity()
         val showResultsButton: Button = findViewById(R.id.testResultsButton)
 
         //fill the config label or lock tests if no config selected.
-        if(userSelectedConfigList.count() == 0){
+        if(userSelectedConfigList.isEmpty())
+        {
             configName.text = "please select a config"
-        } else {
+        }
+        else
+        {
             //parse the names from the config-list and make them pretty for the user
             var prettyConfigString = ""
+
             for (names in userSelectedConfigList){
                 prettyConfigString += names.replace(".json", ", ")
             }
+
             configName.text = prettyConfigString
         }
 
@@ -86,7 +89,7 @@ class MainActivity : AppCompatActivity()
 
         testMoreButton.setOnClickListener{
             numberTimesRunTest += 1
-            numberTestsLabel.text = numberTimesRunTest.toString()+" times"
+            numberTestsLabel.text = "$numberTimesRunTest times"
         }
 
         testLessButton.setOnClickListener{
@@ -94,7 +97,7 @@ class MainActivity : AppCompatActivity()
                 numberTimesRunTest -= 1
             }
 
-            numberTestsLabel.text = numberTimesRunTest.toString()+" times"
+            numberTestsLabel.text = "$numberTimesRunTest times"
         }
 
         sampleConfigButton.setOnClickListener {
@@ -107,105 +110,65 @@ class MainActivity : AppCompatActivity()
         }
     }
 
-    //function to make or re-make and fill a temporary folder with selected configs
-    private fun makeTempFolder(): File{
+    // function to make or re-make and fill a temporary folder with selected configs
+    private fun makeTempFolder(): File
+    {
         val tempConfigFolder = File(getAppFolder(), "tempConfigFolder")
-        if (tempConfigFolder.exists()){
+        if (tempConfigFolder.exists())
+        {
             tempConfigFolder.deleteRecursively()
         }
+
         tempConfigFolder.mkdir()
-        for (configName in userSelectedConfigList){
-            if (configName.contains("shadow", ignoreCase = true)){
-                //ToDo Remove convertShadowConfigtoNested if android library gets its json handler
-                //fixed to be more in line with the linux and iOS version.
-               val newName = convertShadowConfigToNested(configName, tempConfigFolder)
-                val configFile = File(getAppFolder(),newName)
 
-                val newFilePrototype = File(tempConfigFolder,  configName)
-                configFile.copyTo(newFilePrototype) //new file prototpye shouldn't have temp prefix
-                configFile.delete()
-            } else{
-                val configFile = File(getAppFolder(),configName)
-
-                val newFilePrototype = File(tempConfigFolder,  configName)
-                configFile.copyTo(newFilePrototype)
-            }
+        for (configName in userSelectedConfigList)
+        {
+            val configFile = File(getAppFolder(), configName)
+            val newFilePrototype = File(tempConfigFolder,  configName)
+            configFile.copyTo(newFilePrototype)
         }
+
         return tempConfigFolder
     }
 
     fun runTests(canaryConfigDirectory: File) {
         val canaryInstance = Canary(
-            configDirectoryFile = canaryConfigDirectory,
+            configDirectory = canaryConfigDirectory,
             timesToRun = numberTimesRunTest,
             saveDirectory = getAppFolder()
         )
         canaryInstance.runTest()
     }
-    fun convertShadowConfigToNested(configName: String, tempConfigFolder: File): String{
-        //val inputStream: InputStream = File(configName).inputStream()
-        if (!File(getAppFolder(), configName).exists()){
-            showAlert("$configName was not found")
-        }
-        val inputString = File(getAppFolder(), configName).bufferedReader().readLines()
-        val json = JSONObject(inputString[0])
-        val serverIP = json.get("serverIP")
-        val port = json.get("port")
-        val password = json.get("password")
-        val jsonString = """{"serverIP":"$serverIP", "port":$port,"transportConfig":{"password":"$password","cipherName":"DarkStar","cipherMode":"DarkStar"}}
-        """.trimMargin()
-        val newConfigName = "temp" + configName
-        val newFilePrototype = File(tempConfigFolder, newConfigName)
-
-        applicationContext.openFileOutput(newConfigName, Context.MODE_PRIVATE).use { file ->
-            for(char in jsonString){
-                try {
-                    val b = char.code
-                    file.write(b)
-                } catch (e: IOException) {
-                    file.close()
-                    break
-                }
-            }
-        }
-        return newConfigName
-    }
 
     fun saveSampleConfigToFile()
     {
-        // TODO: Remove IP and Password from sample config before pushing any changes.
-        val jsonString = """{"serverIP":"0.0.0.0","serverPort":5678,"transportConfig":{"password":"password","cipherName":"DarkStar","cipherMode":"DarkStar"}}
-            """
         if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
         {
             println("Unable to save the config file: external storage is not available for reading/writing")
         }
+
         val filename = "SampleCanaryShadowConfig.json"
         val configDir = getAppFolder()
-        val saveFile = File(configDir, "canaryShadowConfig.json")
 
-        println("starting the try in sample config")
+        // TODO: Remove IP and Password from sample config before pushing any changes.
+        val password = ""
+        val serverIP = ""
+        val port = 0
+        val cipherName = "DarkStar"
+        val sampleShadowConfig = ShadowConfig(password, cipherName, serverIP, port)
+        val jsonString = Json.encodeToString(sampleShadowConfig)
+        val saveFile = File(configDir, "CanaryShadowConfig.json")
+
         try
         {
-            if (saveFile.exists())
+            if (!saveFile.exists())
             {
-                saveFile.delete()
+                // Make a file for our sample config
+                saveFile.createNewFile()
             }
 
-            // Make a file for our sample config
-            saveFile.createNewFile()
             //write sample config to file
-            applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use { file ->
-                for(char in jsonString){
-                    try {
-                        val b = char.code
-                        file.write(b)
-                    } catch (e: IOException) {
-                        file.close()
-                        break
-                    }
-                }
-            }
+            saveFile.writeText(jsonString)
 
             if (saveFile.exists())
             {

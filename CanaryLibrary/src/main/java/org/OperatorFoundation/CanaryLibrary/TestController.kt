@@ -1,40 +1,55 @@
 package org.OperatorFoundation.CanaryLibrary
 
-import android.content.Context
 import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
 import android.os.Environment.MEDIA_MOUNTED_READ_ONLY
 import android.util.Log
-import org.operatorfoundation.shadowkotlin.ShadowSocket
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.util.*
 import java.text.SimpleDateFormat
+import java.util.*
 
-
-class TestController(val configDirectory: File, val saveDirectory: File)
+class TestController(private val saveDirectory: File)
 {
-    fun runTransportTest(transport: Transport): TestResult?
+    fun runTransportTest(transport: Transport): TestResult
     {
-        // Connection test
-        val connectionTest = TransportConnectionTest(transport)
-        val success = connectionTest.run()
-
-        // Save the result to a file
         val hostString = transport.serverIP + ":${transport.port}"
-        val result = TestResult(hostString, Date(), transport.name, success)
-        save(result, transport.name)
 
-        return null
+        if (transport.serverIP.isEmpty())
+        {
+            val invalidTestName = "invalid_${transport.name}"
+            val invalidTestResponse = TestResult(hostString, Date(), invalidTestName, false)
+            save(invalidTestResponse, invalidTestName)
+
+            return invalidTestResponse
+        }
+        else
+        {
+            // Connection test
+            val connectionTest = TransportConnectionTest(transport)
+            val success = connectionTest.run()
+
+            // Save the result to a file
+            val result = TestResult(hostString, Date(), transport.name, success)
+            save(result, transport.name)
+
+            return result
+        }
     }
 
     // Saves the provided test results to a csv file with a filename that contains a timestamp.
     // If a file with this name already exists it will append the results to the end of the file.
     // - Parameter result: The test result information to be saved. The type is a TestResult struct.
     // - Returns: A boolean value indicating whether or not the results were saved successfully.
-    fun save(result: TestResult, testName: String): Boolean
+    private fun save(result: TestResult, testName: String): Boolean
     {
+        if (!saveDirectory.isDirectory)
+        {
+            println("Unable to save the results file: the selected directory is not a directory or doesn't exist: $saveDirectory")
+            return false
+        }
+
         if (Environment.getExternalStorageState() != MEDIA_MOUNTED)
         {
             println("Unable to save the results file: external storage is not available for reading/writing")
@@ -42,15 +57,16 @@ class TestController(val configDirectory: File, val saveDirectory: File)
         }
 
         val currentDate = Calendar.getInstance()
-        val day: SimpleDateFormat = SimpleDateFormat("dd")
-        val month: SimpleDateFormat = SimpleDateFormat("MM")
-        val year : SimpleDateFormat = SimpleDateFormat("yyyy")
-        val daystring = day.format(currentDate.time).toString()
+        val day = SimpleDateFormat("dd")
+        val month = SimpleDateFormat("MM")
+        val year = SimpleDateFormat("yyyy")
+        val dayString = day.format(currentDate.time).toString()
         val monthString = month.format(currentDate.time).toString()
         val yearString = year.format(currentDate.time).toString()
-        val dateString = yearString + "_" + monthString + "_" + daystring
+        val dateString = yearString + "_" + monthString + "_" + dayString
         val fileNameWithDate = resultsFileName + dateString + resultsFileExtension
         val saveFile = File(saveDirectory, fileNameWithDate)
+
         println("\n**attempting to save results to $saveDirectory**\n")
         println("\n**results file name is: $fileNameWithDate**\n")
 
@@ -94,10 +110,6 @@ class TestController(val configDirectory: File, val saveDirectory: File)
         println("Testing ${transport.name} transport...")
 
         val transportTestResult = runTransportTest(transport)
-
-        if (transportTestResult == null)
-        {
-            println("\n Received a null result when testing ${transport.name} transport. \n")
-        }
+        println("${transport.name} test complete. Result: $transportTestResult.")
     }
 }

@@ -1,18 +1,15 @@
 package canary.android
 
-import android.app.Application
 import android.content.Intent
-import android.content.Intent.ACTION_VIEW
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import canary.android.utilities.getAppFolder
 import canary.android.utilities.shareResults
 import java.io.File
-import kotlin.collections.ArrayList
 
 class TestResultsActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -61,7 +58,16 @@ class TestResultsActivity : AppCompatActivity() {
         {
             val packageName = applicationContext.packageName
             val resultURI = FileProvider.getUriForFile(applicationContext, "$packageName.fileprovider", userSelectedResult!!)
-            val viewIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+
+            val viewIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            {
+                Intent(Intent.ACTION_OPEN_DOCUMENT)
+            }
+            else
+            {
+                TODO("VERSION.SDK_INT < KITKAT")
+            }
+
             viewIntent.setDataAndType(resultURI, "text/csv")
             viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 //            viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -72,16 +78,24 @@ class TestResultsActivity : AppCompatActivity() {
     fun getResultFiles(): ArrayList<File>
     {
         val fileList = ArrayList<File>()
-        var resultsFiles: Array<File> = filesDir.listFiles()
+        val resultsFiles: Array<out File>? = filesDir.listFiles()
 
-        println("&&& Printing Results Files &&&")
-        for (thisFile in resultsFiles)
+        if (resultsFiles != null)
         {
-            println(thisFile.name)
-            if (thisFile.name.contains(".csv"))
+            println("&&& Printing Results Files &&&")
+
+            for (thisFile in resultsFiles)
             {
-                fileList.add(thisFile)
+                println(thisFile.name)
+                if (thisFile.name.contains(".csv"))
+                {
+                    fileList.add(thisFile)
+                }
             }
+        }
+        else
+        {
+            println("No Result files were found in $filesDir")
         }
 
         return fileList

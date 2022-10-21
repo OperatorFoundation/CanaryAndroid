@@ -102,7 +102,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginBottom="50dp"
         android:text=" 1 time"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/testLess"
         app:layout_constraintEnd_toEndOf="@+id/RunNumberLabel"
         app:layout_constraintStart_toEndOf="@+id/testLess"

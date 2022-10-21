@@ -2,11 +2,11 @@ package canary.android
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import canary.android.utilities.getAppFolder
@@ -14,7 +14,7 @@ import canary.android.utilities.showAlert
 import java.io.File
 
 
-class ConfigFilesActivity() : AppCompatActivity() {
+class ConfigFilesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var fileList: ArrayList<ConfigFileData>
     private lateinit var fileAdapter: ConfigFileAdapter
@@ -24,7 +24,7 @@ class ConfigFilesActivity() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file_browser)
-        Log.i(tag,"file Browser view oncreate")
+        Log.i(tag,"file Browser view onCreate")
         //buttons
         val homeButton: Button = findViewById(R.id.homeButton)
         val deleteConfigButton: Button = findViewById(R.id.DeleteConfigs)
@@ -49,9 +49,11 @@ class ConfigFilesActivity() : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         homeButton.setOnClickListener {
-            if(userSelectedConfigList.count() < 1){
+            if(userSelectedConfigList.isEmpty())
+            {
                 showAlert("Please select at least one config")
             }
+
             //return the user home even if they did not select, otherwise they can get stuck here.
             val homeIntent = Intent(this, MainActivity::class.java)
             startActivity(homeIntent)
