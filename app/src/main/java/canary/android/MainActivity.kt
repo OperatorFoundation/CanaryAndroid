@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity()
         val browseButton: Button = findViewById(R.id.SelectConfigButton)
         val testMoreButton: Button = findViewById(R.id.testMore)
         val testLessButton: Button = findViewById(R.id.testLess)
-        val sampleConfigButton: Button = findViewById(R.id.SampleConfigButton)
         val showResultsButton: Button = findViewById(R.id.testResultsButton)
 
         //fill the config label or lock tests if no config selected.
@@ -63,7 +62,6 @@ class MainActivity : AppCompatActivity()
         runTestButton.setOnClickListener{
             //create temporary file for configs.
             val tempConfigFolder = makeTempFolder()
-
             if (userSelectedConfigList.size > 0) {
                 logTextView.text = "performing tests..."
 
@@ -100,10 +98,6 @@ class MainActivity : AppCompatActivity()
             numberTestsLabel.text = "$numberTimesRunTest times"
         }
 
-        sampleConfigButton.setOnClickListener {
-            saveSampleConfigToFile()
-        }
-
         showResultsButton.setOnClickListener {
             val resultsIntent = Intent(this, TestResultsActivity::class.java)
             startActivity(resultsIntent)
@@ -138,52 +132,6 @@ class MainActivity : AppCompatActivity()
             saveDirectory = getAppFolder()
         )
         canaryInstance.runTest()
-    }
-
-    fun saveSampleConfigToFile()
-    {
-        if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
-        {
-            println("Unable to save the config file: external storage is not available for reading/writing")
-        }
-
-        val filename = "SampleCanaryShadowConfig.json"
-        val configDir = getAppFolder()
-
-        // TODO: Remove IP and Password from sample config before pushing any changes.
-        val password = ""
-        val serverIP = ""
-        val port = 0
-        val cipherName = "DarkStar"
-        val sampleShadowConfig = ShadowConfig(password, cipherName, serverIP, port)
-        val jsonString = Json.encodeToString(sampleShadowConfig)
-        val saveFile = File(configDir, "CanaryShadowConfig.json")
-
-        try
-        {
-            if (!saveFile.exists())
-            {
-                // Make a file for our sample config
-                saveFile.createNewFile()
-            }
-
-            //write sample config to file
-            saveFile.writeText(jsonString)
-
-            if (saveFile.exists())
-            {
-                showAlert("The $filename config has been saved to your phone.")
-            }
-            else
-            {
-                showAlert("We were unable to save the $filename config to your phone.")
-            }
-        }
-        catch (error: Exception)
-        {
-            showAlert("We were unable to save the $filename config. Error ${error.message}")
-            error.printStackTrace()
-        }
     }
 }
 

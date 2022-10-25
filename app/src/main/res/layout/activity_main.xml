@@ -37,22 +37,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="@string/browse"
-        app:layout_constraintBottom_toTopOf="@+id/SampleConfigButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/configLabel"
-     />
-
-    <Button
-        android:id="@+id/SampleConfigButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="@string/sample_config"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SelectConfigButton"
-     />
+        app:layout_constraintTop_toBottomOf="@+id/configLabel" />
 
     <TextView
         android:id="@+id/RunNumberLabel"
@@ -61,13 +48,13 @@
         android:layout_marginTop="20dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/times_to_run_test"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@+id/SampleConfigButton"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toTopOf="@+id/testMore"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintHorizontal_bias="0.385"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SelectConfigButton" />
 
     <Button
         android:id="@+id/testMore"
