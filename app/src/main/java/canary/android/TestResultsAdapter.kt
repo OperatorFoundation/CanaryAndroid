@@ -15,7 +15,6 @@ class TestResultsAdapter(val fileList:ArrayList<File>): RecyclerView.Adapter<Tes
         val textView: TextView = itemView.findViewById(R.id.config_menu_object)
         private var view: View = itemView
         var resultFile: File? = null
-
         init
         {
             itemView.setOnClickListener(this)

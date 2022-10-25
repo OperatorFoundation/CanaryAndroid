@@ -43,8 +43,6 @@ class TestResultsActivity : AppCompatActivity() {
                 println("Result URI is: ${resultURI.path}")
                 shareResults(this, resultURI)
             }
-
-
         }
 
         viewResultsButton.setOnClickListener{

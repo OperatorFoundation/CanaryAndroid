@@ -115,58 +115,22 @@ class SaveNewConfig : AppCompatActivity()
     fun saveJson(streamer: InputStream?): String?
     {
         val filename = "$userSubmittedFileName.json"
-
         if (streamer == null) {
             return null
         }
 
         val inputAsString = streamer.bufferedReader().use { it.readText() }
         val saveFile = File(getAppFolder(), filename)
-
         if (saveFile.exists()){
             saveFile.delete()
         }
 
         val createFileSuccess = saveFile.createNewFile()
-
         if (createFileSuccess){
-            println("\n created a file: $filename")
             saveFile.appendText(inputAsString)
-
-        }
-        else {
+        } else {
             println("\n create file did not succeed \n")
         }
-
-        // val bufferedReader = streamer.bufferedReader()
-//        applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use { file ->
-//            File file = //...
-//            try(OutputStream outputStream = new FileOutputStream(file)){
-//                IOUtils.copy(streamer, outputStream);
-//            } catch (FileNotFoundException e) {
-//                // handle exception here
-//            } catch (IOException e) {
-//                // handle exception here
-//            }
-//            while (true) {
-//                try {
-//
-//                    val b = bufferedReader.read()
-//                    file.write(b)
-//                    if (b == 125) {
-//                        file.close()
-//                        bufferedReader.close()
-//                        streamer.close()
-//                        break
-//                    }
-//                } catch (e: IOException) {
-//                    file.close()
-//                    bufferedReader.close()
-//                    streamer.close()
-//                    break
-//                }
-//            }
-//        }
 
         return filename
     }
