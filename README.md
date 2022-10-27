@@ -13,7 +13,7 @@ Currently [Shadow](https://github.com/OperatorFoundation/ShadowSwift.git) and [S
 *This example app requires Android 4.2 (minSdk of 17) or higher.*
 
 ### Add the library as a dependency. 
-- The following link provides instructions on adding this dependency: (https://jitpack.io/#OperatorFoundation/CanaryAndroid)
+- The following link provides instructions on adding this dependency: [JitPack Instructions] (https://jitpack.io/#OperatorFoundation/CanaryAndroid)
 
 ### To run Canary transport connection tests:
 - In the app select the directory that has the config files for the transports that you want to use for connection tests (transport client config files must be saved in the file management system of the device).
