@@ -1,10 +1,3 @@
-CanaryAndroid
-A Kotlin library designed to power Android apps. Based on the original project written in Swift.
-Canary is a tool for testing transport connections and gathering the packets for analysis.
-Canary will run a series of transport tests based on the configs that you provide. It is possible to test each transport on a different transport server based on what host information is provided in the transport config files.
-Currently only Shadow tests are supported. Replicant support is underway, and will be capable of mimicking other transports when it is complete.
-
-
 # CanaryAndroid
 
 An example Kotlin application to demonstrate one way to use the [Canary Library for Android](https://github.com/OperatorFoundation/CanaryAndroid.git).
