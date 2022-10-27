@@ -23,15 +23,12 @@ import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity()
 {
-    lateinit var logTextView: TextView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //textViews
-        logTextView = findViewById(R.id.logDisplayField)
-        logTextView.movementMethod = ScrollingMovementMethod()
         val numberTestsLabel: TextView = findViewById(R.id.numberOfTestsDisplay)
         val configName: TextView = findViewById(R.id.SelectedConfigName)
 
@@ -49,24 +46,16 @@ class MainActivity : AppCompatActivity()
         }
         else
         {
-            //parse the names from the config-list and make them pretty for the user
-            var prettyConfigString = ""
-
-            for (names in userSelectedConfigList){
-                prettyConfigString += names.replace(".json", ", ")
-            }
-
-            configName.text = prettyConfigString
+            configName.text = userSelectedConfig
         }
 
         runTestButton.setOnClickListener{
             //create temporary file for configs.
             val tempConfigFolder = makeTempFolder()
-            if (userSelectedConfigList.size > 0) {
-                logTextView.text = "performing tests..."
-
-                //thread the internet connection so app doesn't stop it.
-                thread(start = true) {
+            if (userSelectedConfigList.size > 0)
+            {
+                thread(start = true)
+                {
                     runTests(tempConfigFolder)
                     runOnUiThread {
                         val resultsIntent = Intent(this, TestResultsActivity::class.java)
@@ -76,7 +65,7 @@ class MainActivity : AppCompatActivity()
             }
             else
             {
-                showAlert("Please select at least one Config to test.")
+                showAlert("Please select at least one config to test.")
             }
         }
 
@@ -91,7 +80,8 @@ class MainActivity : AppCompatActivity()
         }
 
         testLessButton.setOnClickListener{
-            if(numberTimesRunTest != 1){
+            if(numberTimesRunTest != 1)
+            {
                 numberTimesRunTest -= 1
             }
 
@@ -125,7 +115,8 @@ class MainActivity : AppCompatActivity()
         return tempConfigFolder
     }
 
-    fun runTests(canaryConfigDirectory: File) {
+    fun runTests(canaryConfigDirectory: File)
+    {
         val canaryInstance = Canary(
             configDirectory = canaryConfigDirectory,
             timesToRun = numberTimesRunTest,

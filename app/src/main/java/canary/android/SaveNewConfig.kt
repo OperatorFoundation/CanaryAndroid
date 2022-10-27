@@ -23,7 +23,6 @@ class SaveNewConfig : AppCompatActivity()
         val cancelButton: Button = findViewById(R.id.cancel_new_config_button)
 
         //text views
-        //user input field
         val configFileName: EditText = findViewById(R.id.filename_input)
 
         //variables
@@ -36,7 +35,6 @@ class SaveNewConfig : AppCompatActivity()
                 if ("application/json" == intent.type)
                 {
                     //read file name and set that as hint.
-                    //val uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_COMPONENT_NAME)
                     nameOfLinkedFile = intent.dataString
 
                     if (nameOfLinkedFile != null)

@@ -15,8 +15,7 @@
         android:scrollbars="vertical"
         android:textAlignment="center"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/ViewResults"
-        tools:layout_editor_absoluteX="-23dp" />
+        app:layout_constraintBottom_toTopOf="@id/ViewResults" />
 
     <Button
         android:id="@+id/ViewResults"

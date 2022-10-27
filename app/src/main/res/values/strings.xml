@@ -18,11 +18,15 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="times_to_run_test">Times to run test:</string>
     <string name="view_results">View Results</string>
     <string name="share">Share</string>
     <string name="home">Home</string>
+    <string name="please_name_this_config">Please Name This Config</string>
+    <string name="hint">ExampleCanaryShadowConfigName</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_and_continue">Save and Continue</string>
+    <string name="use_selected_configs">Use Selected Configs</string>
 </resources>

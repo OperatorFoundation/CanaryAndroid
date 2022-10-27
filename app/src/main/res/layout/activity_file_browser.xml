@@ -8,39 +8,32 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fileRecyler"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintWidth_max="wrap"
-        app:layout_constraintWidth_percent="0.4"
-        app:layout_constraintBottom_toTopOf="@id/homeButton"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="10dp"
+        android:scrollbars="vertical"
+        android:textAlignment="center"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/homeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="98dp"
-        android:layout_marginTop="170dp"
-        android:layout_marginEnd="99dp"
-        android:layout_marginBottom="8dp"
-        android:text="Use Selected Configs"
-        app:layout_constraintBottom_toTopOf="@+id/DeleteConfigs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_margin="25dp"
+        android:text="@string/use_selected_configs"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fileRecyler" />
 
     <Button
         android:id="@+id/DeleteConfigs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-        android:layout_marginEnd="85dp"
-        android:layout_marginBottom="93dp"
         android:text="@string/Delete_Config_Button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/homeButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

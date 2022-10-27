@@ -38,10 +38,15 @@ class TestResultsActivity : AppCompatActivity() {
         shareButton.setOnClickListener{
             if (userSelectedResult != null)
             {
-                // TODO: Add try/catch block
-                val resultURI = FileProvider.getUriForFile(applicationContext, "canary.android.fileprovider", userSelectedResult!!)
-                println("Result URI is: ${resultURI.path}")
-                shareResults(this, resultURI)
+                try
+                {
+                    val resultURI = FileProvider.getUriForFile(applicationContext, "canary.android.fileprovider", userSelectedResult!!)
+                    shareResults(this, resultURI)
+                }
+                catch (error: Exception)
+                {
+                   println("Error sharing the file ${userSelectedResult.toString()}. Error: $error")
+                }
             }
         }
 
@@ -68,7 +73,7 @@ class TestResultsActivity : AppCompatActivity() {
 
             viewIntent.setDataAndType(resultURI, "text/csv")
             viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//            viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            viewIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             startActivity(viewIntent)
         }
     }

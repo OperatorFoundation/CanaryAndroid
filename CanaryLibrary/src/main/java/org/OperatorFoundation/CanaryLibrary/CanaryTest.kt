@@ -87,9 +87,16 @@ class CanaryTest(private val configDirectory: File, private val timesToRun: Int 
                 // eg:: shadow in the filename
                 if (configFile.name.contains(transportType.name, true))
                 {
-                    val maybeNewTransport = Transport(configFile.name, transportType, configFile)
-                    testingTransports += maybeNewTransport
-                    println("\n✔️ ${maybeNewTransport.name} test is ready\n")
+                    try
+                    {
+                        val maybeNewTransport = Transport(configFile.name, transportType, configFile)
+                        testingTransports += maybeNewTransport
+                        println("\n✔️ ${maybeNewTransport.name} test is ready\n")
+                    }
+                    catch (error: Exception)
+                    {
+                        println("Error creating transport from ${configFile.name}. Error: $error")
+                    }
                 }
             }
         }
