@@ -7,6 +7,7 @@ import android.os.Parcelable
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toFile
 import canary.android.utilities.getAppFolder
 import java.io.File
 import java.io.InputStream
@@ -34,32 +35,6 @@ class SaveNewConfig : AppCompatActivity()
             {
                 if ("application/json" == intent.type)
                 {
-                    //read file name and set that as hint.
-                    nameOfLinkedFile = intent.dataString
-
-                    if (nameOfLinkedFile != null)
-                    {
-                        val fileNameList = getAppFolder().list()
-
-                        if (fileNameList != null)
-                        {
-                            if (fileNameList.contains(nameOfLinkedFile))
-                            {
-                                var count = 2
-                                var newName = nameOfLinkedFile + count.toString()
-
-                                while(!(fileNameList.contains(newName)))
-                                {
-                                    count += 1
-                                    newName = nameOfLinkedFile + count.toString()
-                                }
-
-                                configFileName.setText(newName)
-                                configFileName.hint = newName
-                            }
-                        }
-                    }
-
                     //set up the json to be saved, but then wait for the user to press save&continue
                     jsonInputStream = receiveJsonFromExternalShare(intent)
                 }
@@ -68,13 +43,16 @@ class SaveNewConfig : AppCompatActivity()
 
         cancelButton.setOnClickListener {
             userSubmittedFileName = null
-            val homeEmptyHandedIntent = Intent(this, MainActivity::class.java)
-            startActivity(homeEmptyHandedIntent)
+            val cancel = Intent(this, MainActivity::class.java)
+            startActivity(cancel)
         }
 
         saveContinueButton.setOnClickListener {
             if (configFileName.text != null)
             {
+                println("Config file name is: ${configFileName.text}")
+
+//                configFileName =
                 //get user input
                 userSubmittedFileName = configFileName.text.toString()
 
@@ -82,8 +60,8 @@ class SaveNewConfig : AppCompatActivity()
                 saveJson(jsonInputStream)
 
                 //go home
-                val homeHappilyIntent = Intent(this, MainActivity::class.java)
-                startActivity(homeHappilyIntent)
+                val saveJson = Intent(this, MainActivity::class.java)
+                startActivity(saveJson)
             }
         }
 
@@ -96,12 +74,9 @@ class SaveNewConfig : AppCompatActivity()
         if (json != null)
         {
             (json as? Uri)?.let { jsonUri ->
-                println(jsonUri)
                 val appContext = applicationContext
                 val contentResolved = appContext.contentResolver ?: return null
                 val streamer = contentResolved.openInputStream(jsonUri) ?: return null
-
-                var bufferedReader = streamer.bufferedReader()
 
                 return streamer
             }
