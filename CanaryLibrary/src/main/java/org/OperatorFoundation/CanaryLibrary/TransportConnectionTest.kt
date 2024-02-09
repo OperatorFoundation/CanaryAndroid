@@ -1,29 +1,31 @@
 package org.OperatorFoundation.CanaryLibrary
 
+import android.content.Context
 import android.util.Log
-import org.operatorfoundation.shadowkotlin.ShadowConfig
-import org.operatorfoundation.shadowkotlin.ShadowSocket
+import org.operatorfoundation.shadow.ShadowConfig
+import org.operatorfoundation.shadow.ShadowSocket
+
 import java.nio.charset.Charset
 
 class TransportConnectionTest(private var transport: Transport)
 {
     private val textBytes = httpRequestString.toByteArray()
 
-    fun run(): Boolean
+    fun run(context: Context): Boolean
     {
         when (transport.transportType)
         {
-            TransportType.Shadow -> return runShadow()
+            TransportType.Shadow -> return runShadow(context)
         }
     }
 
-    private fun runShadow(): Boolean
+    private fun runShadow(context: Context): Boolean
     {
         val shadowConfig: ShadowConfig = transport.config as ShadowConfig
 
         try
         {
-            val shadowSocket = ShadowSocket(shadowConfig, transport.serverIP, transport.port)
+            val shadowSocket = ShadowSocket(shadowConfig, context)
             println("\n🧩 Launched ${transport.name}. 🧩")
 
             val shadowOutputStream = shadowSocket.outputStream
@@ -70,9 +72,7 @@ class TransportConnectionTest(private var transport: Transport)
             println("--> Received an error while attempting to create a connection: $error")
             println("--> Server IP: ${transport.serverIP}")
             println("--> Server Port: ${transport.port}")
-            println("--> Server Password: ${shadowConfig.password}")
-            //todo remove stacktrace for production
-            Log.d("myapp", Log.getStackTraceString(java.lang.Exception()))
+            println("--> Server PublicKey: ${shadowConfig.serverPublicKey}")
             return false
         }
     }

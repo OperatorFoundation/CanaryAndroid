@@ -14,3 +14,10 @@
 .cxx
 local.properties
 .idea/androidTestResultsUserPreferences.xml
+.idea/misc.xml
+.idea/migrations.xml
+.idea/kotlinc.xml
+.idea/gradle.xml
+.idea/deploymentTargetDropDown.xml
+.idea/compiler.xml
+.idea/androidTestResultsUserPreferences.xml

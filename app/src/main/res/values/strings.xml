@@ -29,4 +29,5 @@
     <string name="cancel">Cancel</string>
     <string name="save_and_continue">Save and Continue</string>
     <string name="use_selected_configs">Use Selected Configs</string>
+    <string name="please_select_a_config_file">Please select a config file:</string>
 </resources>

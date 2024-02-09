@@ -7,8 +7,6 @@ import android.os.Parcelable
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toFile
-import canary.android.utilities.getAppFolder
 import java.io.File
 import java.io.InputStream
 
@@ -93,7 +91,7 @@ class SaveNewConfig : AppCompatActivity()
         }
 
         val inputAsString = streamer.bufferedReader().use { it.readText() }
-        val saveFile = File(getAppFolder(), filename)
+        val saveFile = File(this.filesDir, filename)
         if (saveFile.exists()){
             saveFile.delete()
         }

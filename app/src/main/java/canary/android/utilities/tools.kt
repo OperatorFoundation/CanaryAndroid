@@ -16,9 +16,11 @@ fun shareResults(context: Context, resultsFile: Uri){
         val sendIntent = Intent(Intent.ACTION_SEND).apply{
             type = "text/csv"
             putExtra(Intent.EXTRA_STREAM, resultsFile)
+            setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
         val shareIntent = Intent.createChooser(sendIntent, "Share Results")
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         context.startActivity(shareIntent)
     }
     catch (exception: Exception)

@@ -1,8 +1,10 @@
 package org.OperatorFoundation.CanaryLibrary
 
+import android.content.Context
+import androidx.documentfile.provider.DocumentFile
 import java.io.File
 
-class CanaryTest(private val configDirectory: File, private val timesToRun: Int = 1, private var saveDirectory: File)
+class CanaryTest(private val configDirectory: DocumentFile, private val timesToRun: Int = 1, private var saveDirectory: File, val context: Context)
 {
     fun begin()
     {
@@ -21,7 +23,7 @@ class CanaryTest(private val configDirectory: File, private val timesToRun: Int 
         }
     }
 
-    private  fun runAllTests()
+    private fun runAllTests()
     {
         val testController = TestController(saveDirectory)
 
@@ -32,7 +34,7 @@ class CanaryTest(private val configDirectory: File, private val timesToRun: Int 
             for (transport in testingTransports)
             {
                 println("\n 🧪 Starting test for ${transport.name} 🧪")
-                testController.test(transport)
+                testController.test(transport, context)
             }
         }
     }
@@ -56,12 +58,12 @@ class CanaryTest(private val configDirectory: File, private val timesToRun: Int 
         // Does the Config Directory Exist?
         if (!configDirectory.exists())
         {
-            println("\n‼️ The selected config directory does not exist at ${configDirectory.path}.\n")
+            println("\n‼️ The selected config directory does not exist at ${configDirectory.name}.\n")
             return false
         }
         else if (!configDirectory.isDirectory)
         {
-            println("\n‼️ The selected config directory is not a directory. Please select the directory where your transport config files are located. \nSelected path: ${configDirectory.path}.\n")
+            println("\n‼️ The selected config directory is not a directory. Please select the directory where your transport config files are located. \nSelected path: ${configDirectory.name}.\n")
             return false
         }
 
@@ -76,7 +78,7 @@ class CanaryTest(private val configDirectory: File, private val timesToRun: Int 
 
         if (configFiles.isEmpty())
         {
-            println("\n ‼️ There are no config files in the selected directory: ${configDirectory.path}")
+            println("\n ‼️ There are no config files in the selected directory: ${configDirectory.name}")
             return false
         }
 
@@ -85,17 +87,21 @@ class CanaryTest(private val configDirectory: File, private val timesToRun: Int 
             {
                 // Check each file name to see if it contains the name of a supported transport
                 // eg:: shadow in the filename
-                if (configFile.name.contains(transportType.name, true))
+                var filename = configFile.name
+                if (filename != null)
                 {
-                    try
+                    if (filename.contains(transportType.name, true) == true)
                     {
-                        val maybeNewTransport = Transport(configFile.name, transportType, configFile)
-                        testingTransports += maybeNewTransport
-                        println("\n✔️ ${maybeNewTransport.name} test is ready\n")
-                    }
-                    catch (error: Exception)
-                    {
-                        println("Error creating transport from ${configFile.name}. Error: $error")
+                        try
+                        {
+                            val maybeNewTransport = Transport(filename, transportType, configFile, context)
+                            testingTransports += maybeNewTransport
+                            println("\n✔️ ${maybeNewTransport.name} test is ready\n")
+                        }
+                        catch (error: Exception)
+                        {
+                            println("Error creating transport from ${configFile.name}. Error: $error")
+                        }
                     }
                 }
             }

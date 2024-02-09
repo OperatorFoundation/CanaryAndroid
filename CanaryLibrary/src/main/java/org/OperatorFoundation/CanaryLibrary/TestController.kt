@@ -1,5 +1,6 @@
 package org.OperatorFoundation.CanaryLibrary
 
+import android.content.Context
 import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
 import android.os.Environment.MEDIA_MOUNTED_READ_ONLY
@@ -12,7 +13,7 @@ import java.util.*
 
 class TestController(private val saveDirectory: File)
 {
-    fun runTransportTest(transport: Transport): TestResult
+    fun runTransportTest(transport: Transport, context: Context): TestResult
     {
         val hostString = transport.serverIP + ":${transport.port}"
 
@@ -28,7 +29,7 @@ class TestController(private val saveDirectory: File)
         {
             // Connection test
             val connectionTest = TransportConnectionTest(transport)
-            val success = connectionTest.run()
+            val success = connectionTest.run(context)
 
             // Save the result to a file
             val result = TestResult(hostString, Date(), transport.name, success)
@@ -78,9 +79,10 @@ class TestController(private val saveDirectory: File)
             // The first row should be our labels
             val labelRow = "TestDate, ServerIP, Transport, Success\n"
             saveFile.appendText(labelRow)
+            saveFile.appendText("/n")
         }
 
-        // Add out newest test results to the file
+        // Add our newest test results to the file
         val resultString = "${result.testDate}, ${result.hostString}, $testName, ${result.success}\n"
         saveFile.appendText(resultString)
 
@@ -105,11 +107,11 @@ class TestController(private val saveDirectory: File)
         return saveFile.exists()
     }
 
-    fun test(transport: Transport) {
+    fun test(transport: Transport, context: Context) {
 
         println("Testing ${transport.name} transport...")
 
-        val transportTestResult = runTransportTest(transport)
+        val transportTestResult = runTransportTest(transport, context)
         println("${transport.name} test complete. Result: $transportTestResult.")
     }
 }

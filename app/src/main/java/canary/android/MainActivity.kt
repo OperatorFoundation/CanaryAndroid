@@ -5,24 +5,28 @@
 
 package canary.android
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.text.method.ScrollingMovementMethod
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import canary.android.utilities.getAppFolder
+import androidx.documentfile.provider.DocumentFile
 import canary.android.utilities.showAlert
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.OperatorFoundation.CanaryLibrary.Canary
-import org.operatorfoundation.shadowkotlin.ShadowConfig
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity()
 {
+    val CONFIG_DIRECTORY_REQUEST = 9756
+    var canary: Canary? = null
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -39,39 +43,19 @@ class MainActivity : AppCompatActivity()
         val testLessButton: Button = findViewById(R.id.testLess)
         val showResultsButton: Button = findViewById(R.id.testResultsButton)
 
-        //fill the config label or lock tests if no config selected.
-        if(userSelectedConfigList.isEmpty())
-        {
-            configName.text = "please select a config"
-        }
-        else
-        {
-            configName.text = userSelectedConfig
-        }
-
         runTestButton.setOnClickListener{
-            //create temporary file for configs.
-            val tempConfigFolder = makeTempFolder()
-            if (userSelectedConfigList.size > 0)
+            thread(start = true)
             {
-                thread(start = true)
-                {
-                    runTests(tempConfigFolder)
-                    runOnUiThread {
-                        val resultsIntent = Intent(this, TestResultsActivity::class.java)
-                        startActivity(resultsIntent)
-                    }
+                runTests()
+                runOnUiThread {
+                    val resultsIntent = Intent(this, TestResultsActivity::class.java)
+                    startActivity(resultsIntent)
                 }
-            }
-            else
-            {
-                showAlert("Please select at least one config to test.")
             }
         }
 
         browseButton.setOnClickListener {
-            val browseIntent = Intent(this, ConfigFilesActivity::class.java)
-            startActivity(browseIntent)
+            getConfigDirectory()
         }
 
         testMoreButton.setOnClickListener{
@@ -94,35 +78,51 @@ class MainActivity : AppCompatActivity()
         }
     }
 
-    // function to make or re-make and fill a temporary folder with selected configs
-    private fun makeTempFolder(): File
+    private fun getConfigDirectory()
     {
-        val tempConfigFolder = File(getAppFolder(), "tempConfigFolder")
-        if (tempConfigFolder.exists())
-        {
-            tempConfigFolder.deleteRecursively()
-        }
+        println("getConfigDirectory tapped.")
 
-        tempConfigFolder.mkdir()
-
-        for (configName in userSelectedConfigList)
-        {
-            val configFile = File(getAppFolder(), configName)
-            val newFilePrototype = File(tempConfigFolder,  configName)
-            configFile.copyTo(newFilePrototype)
-        }
-
-        return tempConfigFolder
+        val getConfigDirectoryIntent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+        startActivityForResult(getConfigDirectoryIntent, CONFIG_DIRECTORY_REQUEST)
     }
 
-    fun runTests(canaryConfigDirectory: File)
+    fun runTests()
     {
-        val canaryInstance = Canary(
-            configDirectory = canaryConfigDirectory,
-            timesToRun = numberTimesRunTest,
-            saveDirectory = getAppFolder()
-        )
-        canaryInstance.runTest()
+        if (canary == null)
+        {
+            canary?.runTest()
+        }
+        else
+        {
+            println("Cannot run tests, config files not loaded.")
+        }
+    }
+
+    fun loadTransportConfigs(context: Context, directory: Uri)
+    {
+        println("Config directory: $directory")
+        val directoryDocumentFile = DocumentFile.fromTreeUri(context, directory)
+        if (directoryDocumentFile == null)
+        {
+            println("directoryDocumentFile was null.")
+            return
+        }
+
+        canary = Canary(directoryDocumentFile, numberTimesRunTest, this.filesDir, this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CONFIG_DIRECTORY_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            data?.data?.also { uri ->
+                // Perform operations on the document using its URI.
+                loadTransportConfigs(this, uri)
+            }
+        }
     }
 }
 

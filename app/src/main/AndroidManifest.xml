@@ -64,9 +64,6 @@
         <!-- android:label="@string/title_activity_save_new_config" -->
         <!-- android:theme="@style/Theme.CanaryAndroid.NoActionBar" /> -->
         <activity
-            android:name=".ConfigFilesActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
