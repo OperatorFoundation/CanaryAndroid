@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">CanaryAndroid</string>
     <string name="Delete_Config_Button">Delete Selected Configs</string>
-    <string name="transport_load_config">Configs Selected for Test</string>
+    <string name="transport_load_config">Directory Selected for Test</string>
     <string name="how_many_times_do_you_want_to_run_the_test">How many times do you want to run the test?</string>
     <string name="run_log">Run Log:</string>
     <string name="browse">Choose Config</string>

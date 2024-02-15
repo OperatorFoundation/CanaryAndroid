@@ -90,7 +90,7 @@ class CanaryTest(private val configDirectory: DocumentFile, private val timesToR
                 var filename = configFile.name
                 if (filename != null)
                 {
-                    if (filename.contains(transportType.name, true) == true)
+                    if (filename.contains(transportType.name, true))
                     {
                         try
                         {

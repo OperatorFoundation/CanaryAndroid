@@ -14,10 +14,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.documentfile.provider.DocumentFile
-import canary.android.utilities.showAlert
-import kotlinx.serialization.json.Json
 import org.OperatorFoundation.CanaryLibrary.Canary
-import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import kotlin.concurrent.thread
@@ -34,7 +31,7 @@ class MainActivity : AppCompatActivity()
 
         //textViews
         val numberTestsLabel: TextView = findViewById(R.id.numberOfTestsDisplay)
-        val configName: TextView = findViewById(R.id.SelectedConfigName)
+        val configName: TextView = findViewById(R.id.SelectedDirectoryName)
 
         //buttons:
         val runTestButton: Button = findViewById(R.id.runButton)
@@ -42,6 +39,10 @@ class MainActivity : AppCompatActivity()
         val testMoreButton: Button = findViewById(R.id.testMore)
         val testLessButton: Button = findViewById(R.id.testLess)
         val showResultsButton: Button = findViewById(R.id.testResultsButton)
+
+        browseButton.setOnClickListener {
+            getConfigDirectory()
+        }
 
         runTestButton.setOnClickListener{
             thread(start = true)
@@ -52,10 +53,6 @@ class MainActivity : AppCompatActivity()
                     startActivity(resultsIntent)
                 }
             }
-        }
-
-        browseButton.setOnClickListener {
-            getConfigDirectory()
         }
 
         testMoreButton.setOnClickListener{
@@ -86,18 +83,6 @@ class MainActivity : AppCompatActivity()
         startActivityForResult(getConfigDirectoryIntent, CONFIG_DIRECTORY_REQUEST)
     }
 
-    fun runTests()
-    {
-        if (canary == null)
-        {
-            canary?.runTest()
-        }
-        else
-        {
-            println("Cannot run tests, config files not loaded.")
-        }
-    }
-
     fun loadTransportConfigs(context: Context, directory: Uri)
     {
         println("Config directory: $directory")
@@ -109,6 +94,18 @@ class MainActivity : AppCompatActivity()
         }
 
         canary = Canary(directoryDocumentFile, numberTimesRunTest, this.filesDir, this)
+    }
+
+    fun runTests()
+    {
+        if (canary != null)
+        {
+            canary?.runTest()
+        }
+        else
+        {
+            println("Cannot run tests, config files not loaded.")
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
