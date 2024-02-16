@@ -12,11 +12,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.documentfile.provider.DocumentFile
 import org.OperatorFoundation.CanaryLibrary.Canary
 import java.io.File
 import java.io.InputStreamReader
+import java.time.Duration
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity()
@@ -31,7 +33,6 @@ class MainActivity : AppCompatActivity()
 
         //textViews
         val numberTestsLabel: TextView = findViewById(R.id.numberOfTestsDisplay)
-        val configName: TextView = findViewById(R.id.SelectedDirectoryName)
 
         //buttons:
         val runTestButton: Button = findViewById(R.id.runButton)
@@ -77,19 +78,18 @@ class MainActivity : AppCompatActivity()
 
     private fun getConfigDirectory()
     {
-        println("getConfigDirectory tapped.")
-
         val getConfigDirectoryIntent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
         startActivityForResult(getConfigDirectoryIntent, CONFIG_DIRECTORY_REQUEST)
     }
 
     fun loadTransportConfigs(context: Context, directory: Uri)
     {
-        println("Config directory: $directory")
         val directoryDocumentFile = DocumentFile.fromTreeUri(context, directory)
         if (directoryDocumentFile == null)
         {
-            println("directoryDocumentFile was null.")
+            runOnUiThread {
+                Toast.makeText(this, "directoryDocumentFile was null.", Toast.LENGTH_SHORT).show()
+            }
             return
         }
 
@@ -104,7 +104,9 @@ class MainActivity : AppCompatActivity()
         }
         else
         {
-            println("Cannot run tests, config files not loaded.")
+            runOnUiThread {
+                Toast.makeText(this.applicationContext, "Cannot run tests, config files not loaded.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -113,10 +115,7 @@ class MainActivity : AppCompatActivity()
 
         if (requestCode == CONFIG_DIRECTORY_REQUEST && resultCode == Activity.RESULT_OK)
         {
-            // The result data contains a URI for the document or directory that
-            // the user selected.
             data?.data?.also { uri ->
-                // Perform operations on the document using its URI.
                 loadTransportConfigs(this, uri)
             }
         }

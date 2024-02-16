@@ -22,7 +22,6 @@ class TestResultsActivity : AppCompatActivity() {
         //buttons
         val homeButton: Button = findViewById(R.id.ReturnHomeFromResults)
         val shareButton: Button = findViewById(R.id.ShareResults)
-        val viewResultsButton: Button = findViewById(R.id.ViewResults)
         val fileList: ArrayList<File> = getResultFiles()
         recyclerView = findViewById(R.id.resultsRecyclerView)
         fileAdapter = TestResultsAdapter(fileList)
@@ -49,33 +48,6 @@ class TestResultsActivity : AppCompatActivity() {
                 }
             }
         }
-
-        viewResultsButton.setOnClickListener{
-            openFile()
-        }
-    }
-
-    private fun openFile()
-    {
-        if (userSelectedResult != null)
-        {
-            val packageName = applicationContext.packageName
-            val resultURI = FileProvider.getUriForFile(applicationContext, "$packageName.fileprovider", userSelectedResult!!)
-
-            val viewIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            {
-                Intent(Intent.ACTION_OPEN_DOCUMENT)
-            }
-            else
-            {
-                TODO("VERSION.SDK_INT < KITKAT")
-            }
-
-            viewIntent.setDataAndType(resultURI, "text/csv")
-            viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            viewIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-            startActivity(viewIntent)
-        }
     }
 
     fun getResultFiles(): ArrayList<File>
@@ -85,7 +57,7 @@ class TestResultsActivity : AppCompatActivity() {
 
         if (resultsFiles != null)
         {
-            println("&&& Printing Results Files &&&")
+            println("Printing Results Files")
 
             for (thisFile in resultsFiles)
             {

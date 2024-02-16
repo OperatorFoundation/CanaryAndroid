@@ -8,7 +8,7 @@ class CanaryTest(private val configDirectory: DocumentFile, private val timesToR
 {
     fun begin()
     {
-        println("\n attempting to run tests...\n")
+        println("\nAttempting to run tests...\n")
 
         // Make sure we have everything we need first
         if (checkSetup())
@@ -78,7 +78,7 @@ class CanaryTest(private val configDirectory: DocumentFile, private val timesToR
 
         if (configFiles.isEmpty())
         {
-            println("\n ‼️ There are no config files in the selected directory: ${configDirectory.name}")
+            println("\n‼️ There are no config files in the selected directory: ${configDirectory.name}")
             return false
         }
 
@@ -86,8 +86,7 @@ class CanaryTest(private val configDirectory: DocumentFile, private val timesToR
             for (transportType in possibleTransportTypes)
             {
                 // Check each file name to see if it contains the name of a supported transport
-                // eg:: shadow in the filename
-                var filename = configFile.name
+                val filename = configFile.name
                 if (filename != null)
                 {
                     if (filename.contains(transportType.name, true))

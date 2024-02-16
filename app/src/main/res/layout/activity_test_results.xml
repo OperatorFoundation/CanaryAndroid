@@ -15,17 +15,7 @@
         android:scrollbars="vertical"
         android:textAlignment="center"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/ViewResults" />
-
-    <Button
-        android:id="@+id/ViewResults"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/view_results"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/ShareResults"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/ShareResults" />
 
     <Button
         android:id="@+id/ShareResults"
