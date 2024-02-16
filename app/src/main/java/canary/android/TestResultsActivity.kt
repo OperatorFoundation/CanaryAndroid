@@ -57,11 +57,8 @@ class TestResultsActivity : AppCompatActivity() {
 
         if (resultsFiles != null)
         {
-            println("Printing Results Files")
-
             for (thisFile in resultsFiles)
             {
-                println(thisFile.name)
                 if (thisFile.name.contains(".csv"))
                 {
                     fileList.add(thisFile)
