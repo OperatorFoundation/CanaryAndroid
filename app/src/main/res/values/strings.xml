@@ -4,12 +4,12 @@
     <string name="transport_load_config">Directory Selected for Test</string>
     <string name="how_many_times_do_you_want_to_run_the_test">How many times do you want to run the test?</string>
     <string name="run_log">Run Log:</string>
-    <string name="browse">Choose Config</string>
+    <string name="browse">Choose Directory</string>
     <string name="sample_config">Create Sample Config</string>
     <string name="run_test">Run Test</string>
     <string name="textview">TextView</string>
     <string name="show_test_results">Show Results</string>
-    <string name="no_config_selected_yet">No Config Selected Yet</string>
+    <string name="no_directory_selected_yet">Select a directory</string>
     <string name="select_config">Select Config</string>
     <string name="return_home">Return Home</string>
     <string name="title_activity_save_new_config">SaveNewConfig</string>

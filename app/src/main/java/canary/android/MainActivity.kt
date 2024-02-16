@@ -23,6 +23,7 @@ import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity()
 {
+    lateinit var selectedDirectory: TextView
     val CONFIG_DIRECTORY_REQUEST = 9756
     var canary: Canary? = null
 
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity()
 
         //textViews
         val numberTestsLabel: TextView = findViewById(R.id.numberOfTestsDisplay)
+        selectedDirectory = findViewById(R.id.SelectedDirectoryName)
 
         //buttons:
         val runTestButton: Button = findViewById(R.id.runButton)
@@ -92,6 +94,8 @@ class MainActivity : AppCompatActivity()
             }
             return
         }
+
+        selectedDirectory.text = directoryDocumentFile.name
 
         canary = Canary(directoryDocumentFile, numberTimesRunTest, this.filesDir, this)
     }
