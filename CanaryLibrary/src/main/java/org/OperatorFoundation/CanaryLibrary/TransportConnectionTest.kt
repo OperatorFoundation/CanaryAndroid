@@ -31,6 +31,7 @@ class TransportConnectionTest(private var transport: Transport)
             val shadowOutputStream = shadowSocket.outputStream
             val shadowInputStream = shadowSocket.inputStream
             println("\n📣 Running a shadow connection test.")
+
             // Send our http request
             shadowOutputStream.write(textBytes)
             shadowOutputStream.flush()

@@ -40,6 +40,5 @@ class Transport(val name: String, val transportType: TransportType, configFile: 
 
 enum class TransportType
 {
-    //Replicant,
     Shadow
 }

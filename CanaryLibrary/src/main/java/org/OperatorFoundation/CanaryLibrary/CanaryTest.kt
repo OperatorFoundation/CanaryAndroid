@@ -8,9 +8,8 @@ class CanaryTest(private val configDirectory: DocumentFile, private val timesToR
 {
     fun begin()
     {
-        println("\n attempting to run tests...\n")
+        println("\nAttempting to run tests...\n")
 
-        // Make sure we have everything we need first
         if (checkSetup())
         {
             println("✔️ Canary setup complete")
@@ -41,7 +40,6 @@ class CanaryTest(private val configDirectory: DocumentFile, private val timesToR
 
     fun checkSetup(): Boolean
     {
-        // Does the save directory exist?
         if (!saveDirectory.exists())
         {
             println("\n‼️ The selected save directory does not exist at ${saveDirectory.path}.\n")
@@ -55,7 +53,6 @@ class CanaryTest(private val configDirectory: DocumentFile, private val timesToR
 
         println("\n✔️ User selected save directory: ${saveDirectory.path}\n")
 
-        // Does the Config Directory Exist?
         if (!configDirectory.exists())
         {
             println("\n‼️ The selected config directory does not exist at ${configDirectory.name}.\n")
@@ -72,22 +69,18 @@ class CanaryTest(private val configDirectory: DocumentFile, private val timesToR
 
     private fun prepareTransports(): Boolean
     {
-        // Get a list of all of the files in the config directory
-        // return false if we are unable to retrieve a list of files
-        val configFiles = configDirectory.listFiles() ?: return false
+        val configFiles = configDirectory.listFiles()
 
         if (configFiles.isEmpty())
         {
-            println("\n ‼️ There are no config files in the selected directory: ${configDirectory.name}")
+            println("\n‼️ There are no config files in the selected directory: ${configDirectory.name}")
             return false
         }
 
         configFiles.forEach { configFile ->
             for (transportType in possibleTransportTypes)
             {
-                // Check each file name to see if it contains the name of a supported transport
-                // eg:: shadow in the filename
-                var filename = configFile.name
+                val filename = configFile.name
                 if (filename != null)
                 {
                     if (filename.contains(transportType.name, true))

@@ -27,11 +27,8 @@ class TestController(private val saveDirectory: File)
         }
         else
         {
-            // Connection test
             val connectionTest = TransportConnectionTest(transport)
             val success = connectionTest.run(context)
-
-            // Save the result to a file
             val result = TestResult(hostString, Date(), transport.name, success)
             save(result, transport.name)
 
@@ -107,9 +104,9 @@ class TestController(private val saveDirectory: File)
         return saveFile.exists()
     }
 
-    fun test(transport: Transport, context: Context) {
-
-        println("Testing ${transport.name} transport...")
+    fun test(transport: Transport, context: Context)
+    {
+        println("\nTesting ${transport.name} transport\n")
 
         val transportTestResult = runTransportTest(transport, context)
         println("${transport.name} test complete. Result: $transportTestResult.")
