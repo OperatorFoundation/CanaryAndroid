@@ -119,7 +119,10 @@ class MainActivity : AppCompatActivity()
 
         if (requestCode == CONFIG_DIRECTORY_REQUEST && resultCode == Activity.RESULT_OK)
         {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
             data?.data?.also { uri ->
+                // Perform operations on the document using its URI.
                 loadTransportConfigs(this, uri)
             }
         }
