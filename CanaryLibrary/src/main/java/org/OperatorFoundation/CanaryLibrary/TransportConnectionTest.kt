@@ -37,12 +37,17 @@ class TransportConnectionTest(private var transport: Transport)
             println("Wrote ${textBytes.size} bytes.")
 
             // Try to read a response
-            val buffer = ByteArray(235)
+            var buffer = ByteArray(235)
             val numberOfBytesRead = shadowInputStream.read(buffer)
             println("Read $numberOfBytesRead bytes.")
 
             if (numberOfBytesRead > 0)
             {
+                if (numberOfBytesRead < 235)
+                {
+                    buffer = buffer.sliceArray(0 until numberOfBytesRead)
+                }
+
                 val responseString = buffer.toString(Charset.defaultCharset())
 
                 return if (responseString.contains(canaryString))
