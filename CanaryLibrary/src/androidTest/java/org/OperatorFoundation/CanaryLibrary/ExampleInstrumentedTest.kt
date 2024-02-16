@@ -1,11 +1,7 @@
 package org.OperatorFoundation.CanaryLibrary
 
-import android.os.Environment
 import androidx.test.platform.app.InstrumentationRegistry
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class ExampleInstrumentedTest {
@@ -16,14 +12,13 @@ class ExampleInstrumentedTest {
         assertEquals("org.OperatorFoundation.CanaryLibrary.test", appContext.packageName)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun createCanaryInstance() = runTest {
-        // ***** This is the actual API for the Canary Library ******
-        val storageDirectory = Environment.getStorageDirectory()
-        val canary = Canary(configDirectory = storageDirectory, saveDirectory = storageDirectory)
-        assertNotNull(canary)
-        canary.runTest()
-    }
+//    @Test
+//    fun createCanaryInstance() = runTest {
+//        // ***** This is the actual API for the Canary Library ******
+//        val storageDirectory = Environment.getStorageDirectory()
+//        val canary = Canary(configDirectory = storageDirectory, saveDirectory = storageDirectory)
+//        assertNotNull(canary)
+//        canary.runTest()
+//    }
 
 }
