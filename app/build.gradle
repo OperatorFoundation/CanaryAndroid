@@ -47,7 +47,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0'
 
-    implementation 'com.github.OperatorFoundation:ShapeshifterAndroidKotlin:5.0.8'
+    implementation 'com.github.OperatorFoundation:ShapeshifterAndroidKotlin:5.0.9'
     implementation 'com.beust:klaxon:5.6'
 
     implementation 'com.google.android.material:material:1.9.0'
